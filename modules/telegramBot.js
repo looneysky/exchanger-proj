@@ -3,6 +3,7 @@ const QRCode = require('qrcode');
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
 // Подключаем dotenv
 require('dotenv').config();
@@ -199,7 +200,6 @@ bot.on('message', (msg) => {
 
 Для получения пропуска к нам в офис и покупки USDT, вам нужно создать заявку - нажмите на кнопку "Обмен"`);
   } else if (text === "💱 Курс") {
-    // Отправляем GET запрос на API с токеном в заголовках
     axios.get("https://mosca.moscow/api/v1/rate/", {
       headers: {
         "access-token": "pLKHNguNDKifklXVqV1N8XVTHXj_MdocKF6kJFdF8fOXkolyScLaI6zeX1ShxE3YqGT_bWcbxzIC7pg3QnYNKw"
@@ -207,10 +207,9 @@ bot.on('message', (msg) => {
     })
       .then(response => {
         const data = response.data;
+        console.log('API Response:', data); // Добавьте логирование для отладки
 
-        // Проверяем наличие данных
         if (data.buy && data.sell) {
-          // Отправляем сообщение с курсом
           bot.sendMessage(chatId, `💸 *Курс обмена* 💸\n\n🔼 Курс покупки: *${data.buy} ₽*\n🔽 Курс продажи: *${data.sell} ₽*\n\n💰 Обменяйте прямо сейчас!`);
         } else {
           console.error("Sell course data not found!");
