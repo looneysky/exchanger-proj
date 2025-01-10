@@ -1,0 +1,107 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="https://abcex.io/telegram-mini-app-swap/vite.svg">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="/assets/js/index.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini Apps</title>
+    <link rel="stylesheet" href="/assets/css/index.css">
+    <style id="telegram-custom-styles"></style>
+</head>
+
+<body>
+    <div id="root">
+        <div class="Toastify"></div>
+        <div class="p-5 min-h-dvh grid bg-bg-primary bg-bg-primary">
+            <form class="flex flex-col gap-4 relative">
+                <div class="flex flex-col gap-2">
+                    <svg onclick="window.location.href='/'" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="#000000" style="
+    width: 24px;
+"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="#fff" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path><path fill="#fff" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path></g></svg>
+                    <h2 id="course" class="text-[22px] leading-7 text-primary font-bold">Продать USDT - Курс ...</h2>
+                    <p class="text-[15px] leading-[20px] font-normal text-secondary">Выберите сеть, в которой будет
+                        удобно перевести USDT, а также заполните ФИО</p>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <h5 class="text-[16px] leading-[22px] text-primary font-semibold">Сеть</h5>
+                    <div class="flex gap-3"><label
+                            class="py-[10px] px-3 rounded-[10px] bg-bg-secondary has-[:checked]:bg-graphic-primary text-primary has-[:checked]:text-primary-inverted cursor-pointer flex gap-2 items-center"><svg
+                                width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect width="20" height="20" rx="10" fill="url(#paint0_linear_553_8942)"></rect>
+                                <path d="M9.99878 3V8.17521L14.3729 10.1298L9.99878 3Z" fill="white"></path>
+                                <path d="M9.99873 3L5.62402 10.1298L9.99873 8.17521V3Z" fill="white"></path>
+                                <path d="M9.99878 13.4836V17L14.3758 10.9444L9.99878 13.4836Z" fill="white"></path>
+                                <path d="M9.99873 17V13.483L5.62402 10.9444L9.99873 17Z" fill="white"></path>
+                                <path d="M9.99878 12.6695L14.3729 10.1298L9.99878 8.17639V12.6695Z" fill="white"></path>
+                                <path d="M5.62402 10.1298L9.99873 12.6695V8.17639L5.62402 10.1298Z" fill="white"></path>
+                                <defs>
+                                    <linearGradient id="paint0_linear_553_8942" x1="3.57143" y1="20.7143" x2="19.6429"
+                                        y2="5.26862e-7" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#656567"></stop>
+                                        <stop offset="1" stop-color="#BBBBBB"></stop>
+                                    </linearGradient>
+                                </defs>
+                            </svg>ERC-20<input name="sell_networkId" type="radio" class="hidden"
+                                value="ETH"></label><label
+                            class="py-[10px] px-3 rounded-[10px] bg-bg-secondary has-[:checked]:bg-graphic-primary text-primary has-[:checked]:text-primary-inverted cursor-pointer flex gap-2 items-center"><svg
+                                width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect width="20" height="20" rx="10" fill="url(#paint0_linear_553_8947)"></rect>
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M4.27427 4.35688C4.38964 4.21069 4.57671 4.14074 4.7597 4.17535L14.1202 5.94619C14.2148 5.96409 14.3022 6.00892 14.3719 6.0753L16.5115 8.11176C16.7038 8.29484 16.7195 8.59634 16.5472 8.79839L10.1286 16.3244C10.0173 16.4549 9.84696 16.5192 9.67722 16.4949C9.50749 16.4706 9.36206 16.361 9.29191 16.2045L4.21051 4.8712C4.13432 4.70126 4.15889 4.50307 4.27427 4.35688ZM6.62695 5.54634L10.6269 8.62965L12.8955 6.73223L6.62695 5.54634ZM14.0057 7.10729L12.3111 8.52465L15.076 8.12602L14.0057 7.10729ZM14.9262 9.15795L11.0856 9.71168L10.4661 14.3876L14.9262 9.15795ZM9.4838 14.1882L10.1061 9.49085L5.93666 6.27686L9.4838 14.1882Z"
+                                    fill="white"></path>
+                                <defs>
+                                    <linearGradient id="paint0_linear_553_8947" x1="3.57143" y1="20.7143" x2="19.6429"
+                                        y2="5.26862e-7" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#656567"></stop>
+                                        <stop offset="1" stop-color="#BBBBBB"></stop>
+                                    </linearGradient>
+                                </defs>
+                            </svg>TRC-20<input name="sell_networkId" type="radio" class="hidden" value="TRX"></label>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <h5 class="text-[16px] leading-[22px] text-primary font-semibold">Фамилия</h5><label
+                        class="flex flex-col gap-2"><input type="text" name="sell_lastName"
+                            placeholder="Введите фамилию"
+                            class="py-[13px] px-4 rounded-xl bg-bg-secondary placeholder:text-secondary placeholder:leading-[22px] placeholder:text-[17px] text-primary leading-[22px] text-[17px] outline-none border-transparent border-[1.5px]"></label>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <h5 class="text-[16px] leading-[22px] text-primary font-semibold">Имя</h5><label
+                        class="flex flex-col gap-2"><input type="text" name="sell_firstName" placeholder="Введите имя"
+                            class="py-[13px] px-4 rounded-xl bg-bg-secondary placeholder:text-secondary placeholder:leading-[22px] placeholder:text-[17px] text-primary leading-[22px] text-[17px] outline-none border-transparent border-[1.5px]"></label>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <h5 class="text-[16px] leading-[22px] text-primary font-semibold">Отчество (необязательно)</h5>
+                    <label class="flex flex-col gap-2"><input type="text" name="sell_middleName"
+                            placeholder="Введите отчество"
+                            class="py-[13px] px-4 rounded-xl bg-bg-secondary placeholder:text-secondary placeholder:leading-[22px] placeholder:text-[17px] text-primary leading-[22px] text-[17px] outline-none border-transparent border-[1.5px]"></label>
+                </div><label
+                    class="flex items-center justify-between gap-4 py-[18px] px-5 rounded-default bg-bg-secondary text-[17px] leading-6 text-primary font-normal mt-3 mb-3">
+                    <p class="text-[17px] leading-6 text-primary font-normal">Я принимаю <span role="button" onclick="window.open('/terms', '_blank')"
+                            tabindex="0" class="text-link cursor-pointer">правила и условия</span> сервиса</p>
+                    <div><input type="checkbox" name="terms_of_conditions" class="_input_n86ea_1"></div>
+                </label>
+                <div class="w-full" style="height: 92px;">
+                    <div class="fixed bottom-0 left-0 right-0 w-full p-[20px] bg-bg-primary"><button disabled=""
+                            type="submit"
+                            class="rounded-full [&amp;>*]:!text-inherit py-[14px] px-5 w-full text-[17px] font-semibold leading-6 transition-colors disabled:bg-bg-secondary disabled:text-secondary disabled:pointer-events-none bg-graphic-primary text-primary-inverted hover:bg-bg-tertiary hover:text-primary w-full">Продолжить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script defer=""
+        src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+        data-cf-beacon="{&quot;rayId&quot;:&quot;8fde2fec4b9772c5&quot;,&quot;serverTiming&quot;:{&quot;name&quot;:{&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfSpeedBrain&quot;:true,&quot;cfCacheStatus&quot;:true}},&quot;version&quot;:&quot;2024.10.5&quot;,&quot;token&quot;:&quot;5652d555b2cd42218b24bb9bdddf5daa&quot;}"
+        crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>

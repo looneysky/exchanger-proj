@@ -1,0 +1,3068 @@
+<html>
+
+<head>
+    <style type="text/css">
+        .rdp {
+            padding-bottom: .75rem;
+            width: -moz-fit-content;
+            width: fit-content
+        }
+
+        .rdp-month {
+            display: grid;
+            gap: .25rem;
+            justify-content: flex-start
+        }
+
+        .rdp-cell {
+            padding: 0;
+            text-align: center
+        }
+
+        .rdp-cell,
+        .rdp-day,
+        .rdp-weeknumber {
+            height: 2.5rem;
+            width: 2.5rem
+        }
+
+        .rdp-day,
+        .rdp-weeknumber {
+            border-radius: 9999px;
+            overflow: hidden
+        }
+
+        .rdp-day_selected {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-2)/var(--twc-graphic-second-2-opacity, var(--tw-bg-opacity)));
+            opacity: 1
+        }
+
+        .rdp-day_content {
+            --tw-text-opacity: 1;
+            align-items: center;
+            border-radius: 9999px;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)));
+            display: flex;
+            font-size: .875rem;
+            font-weight: 500;
+            height: 100%;
+            justify-content: center;
+            line-height: 1.25rem;
+            width: 100%
+        }
+
+        .rdp-day_selected .rdp-day_content {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-1)/var(--twc-base-1-opacity, var(--tw-text-opacity)));
+            font-weight: 600
+        }
+
+        .rdp-range .rdp-day_range_end .rdp-day_content,
+        .rdp-range .rdp-day_range_start .rdp-day_content,
+        .rdp-single .rdp-day_selected .rdp-day_content {
+            --tw-bg-opacity: 1;
+            --tw-text-opacity: 1;
+            background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)));
+            color: rgb(255 255 255/var(--tw-text-opacity));
+            font-weight: 500
+        }
+
+        .rdp-row .rdp-cell {
+            padding-top: .375rem
+        }
+
+        .rdp:not([dir=rtl]) .rdp-day_range_start:not(.rdp-day_range_end) {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0
+        }
+
+        .rdp:not([dir=rtl]) .rdp-day_range_end:not(.rdp-day_range_start),
+        .rdp[dir=rtl] .rdp-day_range_start:not(.rdp-day_range_end) {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0
+        }
+
+        .rdp[dir=rtl] .rdp-day_range_end:not(.rdp-day_range_start) {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0
+        }
+
+        .rdp-day_range_end.rdp-day_range_start {
+            border-radius: 9999px
+        }
+
+        .rdp-day_range_middle {
+            border-radius: 0
+        }
+
+        .rdp-head_cell {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)));
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+            padding: .5rem 0;
+            text-align: center;
+            text-transform: uppercase
+        }
+    </style>
+    <style type="text/css">
+        .radio-circle:checked+div {
+            --tw-bg-opacity: 1;
+            --tw-border-opacity: 1;
+            background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)));
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .radio-circle:checked+div>svg {
+            visibility: visible
+        }
+    </style>
+    <style type="text/css">
+        .TooltipContent {
+            animation-duration: .4s;
+            animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 10px 38px -10px rgba(14, 18, 22, .35), 0 10px 20px -15px rgba(14, 18, 22, .2);
+            color: var(--violet-11);
+            font-size: 15px;
+            line-height: 1;
+            padding: 10px 15px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            will-change: transform, opacity
+        }
+
+        .TooltipContent[data-state=delayed-open][data-side=top] {
+            animation-name: slideDownAndFade
+        }
+
+        .TooltipContent[data-state=delayed-open][data-side=right] {
+            animation-name: slideLeftAndFade
+        }
+
+        .TooltipContent[data-state=delayed-open][data-side=bottom] {
+            animation-name: slideUpAndFade
+        }
+
+        .TooltipContent[data-state=delayed-open][data-side=left] {
+            animation-name: slideRightAndFade
+        }
+
+        @keyframes slideUpAndFade {
+            0% {
+                opacity: 0;
+                transform: translateY(2px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @keyframes slideRightAndFade {
+            0% {
+                opacity: 0;
+                transform: translateX(-2px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+
+        @keyframes slideDownAndFade {
+            0% {
+                opacity: 0;
+                transform: translateY(-2px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @keyframes slideLeftAndFade {
+            0% {
+                opacity: 0;
+                transform: translateX(2px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+    </style>
+    <style type="text/css">
+        .styles-module_modalScrollableContent__H4wkQ::-webkit-scrollbar-thumb {
+            background: hsl(var(--twc-graphic-second-1)/var(--twc-graphic-second-1-opacity, 1))
+        }
+
+        .styles-module_modalScrollableContent__H4wkQ::-webkit-scrollbar-track {
+            background: transparent
+        }
+    </style>
+    <style type="text/css">
+        .rt-TableRootTable {
+            width: 100%
+        }
+
+        .rt-r-ta-left {
+            text-align: left
+        }
+
+        .rt-r-ta-right {
+            text-align: right
+        }
+
+        .rt-r-ta-center {
+            text-align: center
+        }
+    </style>
+    <style type="text/css">
+        .ui-pointer-events-none {
+            pointer-events: none
+        }
+
+        .ui-pointer-events-auto {
+            pointer-events: auto
+        }
+
+        .ui-invisible {
+            visibility: hidden
+        }
+
+        .ui-fixed {
+            position: fixed
+        }
+
+        .ui-absolute {
+            position: absolute
+        }
+
+        .ui-relative {
+            position: relative
+        }
+
+        .ui-sticky {
+            position: sticky
+        }
+
+        .ui-inset-0 {
+            inset: 0
+        }
+
+        .ui-bottom-\[-28px\] {
+            bottom: -28px
+        }
+
+        .ui-bottom-\[-34px\] {
+            bottom: -34px
+        }
+
+        .ui-left-0 {
+            left: 0
+        }
+
+        .ui-left-\[3px\] {
+            left: 3px
+        }
+
+        .ui-right-0 {
+            right: 0
+        }
+
+        .ui-right-\[3px\] {
+            right: 3px
+        }
+
+        .ui-top-0 {
+            top: 0
+        }
+
+        .ui-top-1 {
+            top: .25rem
+        }
+
+        .ui-z-50 {
+            z-index: 50
+        }
+
+        .ui-z-\[100\] {
+            z-index: 100
+        }
+
+        .ui-z-\[60\] {
+            z-index: 60
+        }
+
+        .ui-z-\[999999999999\] {
+            z-index: 999999999999
+        }
+
+        .ui-m-0\.5 {
+            margin: .125rem
+        }
+
+        .ui-m-auto {
+            margin: auto
+        }
+
+        .ui-mx-auto {
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .ui-my-1\.5 {
+            margin-bottom: .375rem;
+            margin-top: .375rem
+        }
+
+        .ui-my-\[5px\] {
+            margin-bottom: 5px;
+            margin-top: 5px
+        }
+
+        .ui-mb-2 {
+            margin-bottom: .5rem
+        }
+
+        .ui-ml-auto {
+            margin-left: auto
+        }
+
+        .ui-mt-0\.5 {
+            margin-top: .125rem
+        }
+
+        .ui-mt-\[400px\] {
+            margin-top: 400px
+        }
+
+        .ui-box-border {
+            box-sizing: border-box
+        }
+
+        .ui-block {
+            display: block
+        }
+
+        .ui-inline {
+            display: inline
+        }
+
+        .ui-flex {
+            display: flex
+        }
+
+        .ui-inline-flex {
+            display: inline-flex
+        }
+
+        .ui-grid {
+            display: grid
+        }
+
+        .ui-contents {
+            display: contents
+        }
+
+        .ui-hidden {
+            display: none
+        }
+
+        .ui-size-3 {
+            height: .75rem;
+            width: .75rem
+        }
+
+        .ui-size-3\.5 {
+            height: .875rem;
+            width: .875rem
+        }
+
+        .ui-size-4 {
+            height: 1rem;
+            width: 1rem
+        }
+
+        .ui-size-5 {
+            height: 1.25rem;
+            width: 1.25rem
+        }
+
+        .\!ui-h-\[58px\] {
+            height: 58px !important
+        }
+
+        .\!ui-h-fit {
+            height: -moz-fit-content !important;
+            height: fit-content !important
+        }
+
+        .ui-h-0\.5 {
+            height: .125rem
+        }
+
+        .ui-h-1 {
+            height: .25rem
+        }
+
+        .ui-h-10 {
+            height: 2.5rem
+        }
+
+        .ui-h-4 {
+            height: 1rem
+        }
+
+        .ui-h-5 {
+            height: 1.25rem
+        }
+
+        .ui-h-6 {
+            height: 1.5rem
+        }
+
+        .ui-h-7 {
+            height: 1.75rem
+        }
+
+        .ui-h-8 {
+            height: 2rem
+        }
+
+        .ui-h-9 {
+            height: 2.25rem
+        }
+
+        .ui-h-\[1000px\] {
+            height: 1000px
+        }
+
+        .ui-h-\[12px\] {
+            height: 12px
+        }
+
+        .ui-h-\[21px\] {
+            height: 21px
+        }
+
+        .ui-h-\[24px\] {
+            height: 24px
+        }
+
+        .ui-h-\[25px\] {
+            height: 25px
+        }
+
+        .ui-h-\[34px\] {
+            height: 34px
+        }
+
+        .ui-h-\[35px\] {
+            height: 35px
+        }
+
+        .ui-h-\[36px\] {
+            height: 36px
+        }
+
+        .ui-h-\[38px\] {
+            height: 38px
+        }
+
+        .ui-h-\[42px\] {
+            height: 42px
+        }
+
+        .ui-h-\[46px\] {
+            height: 46px
+        }
+
+        .ui-h-\[50px\] {
+            height: 50px
+        }
+
+        .ui-h-\[54px\] {
+            height: 54px
+        }
+
+        .ui-h-\[58px\] {
+            height: 58px
+        }
+
+        .ui-h-\[9px\] {
+            height: 9px
+        }
+
+        .ui-h-fit {
+            height: -moz-fit-content;
+            height: fit-content
+        }
+
+        .ui-h-full {
+            height: 100%
+        }
+
+        .ui-h-px {
+            height: 1px
+        }
+
+        .ui-min-h-10 {
+            min-height: 2.5rem
+        }
+
+        .ui-min-h-7 {
+            min-height: 1.75rem
+        }
+
+        .ui-min-h-\[20px\] {
+            min-height: 20px
+        }
+
+        .ui-min-h-\[24px\] {
+            min-height: 24px
+        }
+
+        .ui-min-h-\[36px\] {
+            min-height: 36px
+        }
+
+        .ui-min-h-\[42px\] {
+            min-height: 42px
+        }
+
+        .ui-min-h-\[48px\] {
+            min-height: 48px
+        }
+
+        .ui-min-h-\[50px\] {
+            min-height: 50px
+        }
+
+        .ui-min-h-\[56px\] {
+            min-height: 56px
+        }
+
+        .ui-min-h-\[58px\] {
+            min-height: 58px
+        }
+
+        .ui-min-h-\[62px\] {
+            min-height: 62px
+        }
+
+        .\!ui-w-full {
+            width: 100% !important
+        }
+
+        .\!ui-w-screen {
+            width: 100vw !important
+        }
+
+        .ui-w-16 {
+            width: 4rem
+        }
+
+        .ui-w-3 {
+            width: .75rem
+        }
+
+        .ui-w-4 {
+            width: 1rem
+        }
+
+        .ui-w-5 {
+            width: 1.25rem
+        }
+
+        .ui-w-6 {
+            width: 1.5rem
+        }
+
+        .ui-w-7 {
+            width: 1.75rem
+        }
+
+        .ui-w-8 {
+            width: 2rem
+        }
+
+        .ui-w-\[11px\] {
+            width: 11px
+        }
+
+        .ui-w-\[12px\] {
+            width: 12px
+        }
+
+        .ui-w-\[200px\] {
+            width: 200px
+        }
+
+        .ui-w-\[21px\] {
+            width: 21px
+        }
+
+        .ui-w-\[34px\] {
+            width: 34px
+        }
+
+        .ui-w-\[36px\] {
+            width: 36px
+        }
+
+        .ui-w-\[38px\] {
+            width: 38px
+        }
+
+        .ui-w-\[400px\] {
+            width: 400px
+        }
+
+        .ui-w-\[42px\] {
+            width: 42px
+        }
+
+        .ui-w-\[46px\] {
+            width: 46px
+        }
+
+        .ui-w-\[54px\] {
+            width: 54px
+        }
+
+        .ui-w-fit {
+            width: -moz-fit-content;
+            width: fit-content
+        }
+
+        .ui-w-full {
+            width: 100%
+        }
+
+        .ui-min-w-0 {
+            min-width: 0
+        }
+
+        .ui-min-w-10 {
+            min-width: 2.5rem
+        }
+
+        .ui-min-w-4 {
+            min-width: 1rem
+        }
+
+        .ui-min-w-7 {
+            min-width: 1.75rem
+        }
+
+        .ui-min-w-\[125px\] {
+            min-width: 125px
+        }
+
+        .ui-min-w-\[166px\] {
+            min-width: 166px
+        }
+
+        .ui-min-w-\[24px\] {
+            min-width: 24px
+        }
+
+        .ui-min-w-\[281px\] {
+            min-width: 281px
+        }
+
+        .ui-min-w-\[38px\] {
+            min-width: 38px
+        }
+
+        .ui-min-w-\[40px\] {
+            min-width: 40px
+        }
+
+        .ui-min-w-\[50px\] {
+            min-width: 50px
+        }
+
+        .ui-min-w-\[var\(--radix-popper-anchor-width\)\] {
+            min-width: var(--radix-popper-anchor-width)
+        }
+
+        .ui-min-w-fit {
+            min-width: -moz-fit-content;
+            min-width: fit-content
+        }
+
+        .ui-min-w-full {
+            min-width: 100%
+        }
+
+        .ui-max-w-\[48px\] {
+            max-width: 48px
+        }
+
+        .ui-max-w-\[96px\] {
+            max-width: 96px
+        }
+
+        .ui-max-w-full {
+            max-width: 100%
+        }
+
+        .ui-flex-1 {
+            flex: 1 1 0%
+        }
+
+        .ui-flex-shrink-0 {
+            flex-shrink: 0
+        }
+
+        .ui-translate-x-\[2px\] {
+            --tw-translate-x: 2px
+        }
+
+        .ui-translate-x-\[2px\],
+        .ui-translate-x-\[3px\] {
+            transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+        }
+
+        .ui-translate-x-\[3px\] {
+            --tw-translate-x: 3px
+        }
+
+        .ui-rotate-180 {
+            --tw-rotate: 180deg
+        }
+
+        .ui-rotate-180,
+        .ui-scale-50 {
+            transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+        }
+
+        .ui-scale-50 {
+            --tw-scale-x: .5;
+            --tw-scale-y: .5
+        }
+
+        .ui-transform {
+            transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+        }
+
+        @keyframes ui-spin {
+            to {
+                transform: rotate(1turn)
+            }
+        }
+
+        .ui-animate-spin {
+            animation: ui-spin var(--tw-animate-duration, 1s) var(--tw-animate-easing, linear) var(--tw-animate-delay, 0s) var(--tw-animate-iteration, infinite) var(--tw-animate-fill, none)
+        }
+
+        .ui-cursor-default {
+            cursor: default
+        }
+
+        .ui-cursor-pointer {
+            cursor: pointer
+        }
+
+        .ui-cursor-text {
+            cursor: text
+        }
+
+        .ui-select-none {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none
+        }
+
+        .ui-resize-none {
+            resize: none
+        }
+
+        .ui-grid-cols-\[1fr_auto_1fr\] {
+            grid-template-columns: 1fr auto 1fr
+        }
+
+        .ui-flex-row {
+            flex-direction: row
+        }
+
+        .ui-flex-col {
+            flex-direction: column
+        }
+
+        .ui-items-start {
+            align-items: flex-start
+        }
+
+        .ui-items-end {
+            align-items: flex-end
+        }
+
+        .ui-items-center {
+            align-items: center
+        }
+
+        .ui-justify-start {
+            justify-content: flex-start
+        }
+
+        .ui-justify-end {
+            justify-content: flex-end
+        }
+
+        .ui-justify-center {
+            justify-content: center
+        }
+
+        .ui-justify-between {
+            justify-content: space-between
+        }
+
+        .ui-gap-0\.5 {
+            gap: .125rem
+        }
+
+        .ui-gap-1 {
+            gap: .25rem
+        }
+
+        .ui-gap-1\.5 {
+            gap: .375rem
+        }
+
+        .ui-gap-2 {
+            gap: .5rem
+        }
+
+        .ui-gap-3 {
+            gap: .75rem
+        }
+
+        .ui-gap-4 {
+            gap: 1rem
+        }
+
+        .ui-gap-\[16px\] {
+            gap: 16px
+        }
+
+        .ui-gap-\[6px\] {
+            gap: 6px
+        }
+
+        .ui-gap-\[8px\] {
+            gap: 8px
+        }
+
+        .ui-overflow-auto {
+            overflow: auto
+        }
+
+        .ui-overflow-hidden {
+            overflow: hidden
+        }
+
+        .ui-overflow-visible {
+            overflow: visible
+        }
+
+        .ui-overflow-x-auto {
+            overflow-x: auto
+        }
+
+        .ui-overflow-y-auto {
+            overflow-y: auto
+        }
+
+        .ui-truncate {
+            overflow: hidden;
+            white-space: nowrap
+        }
+
+        .ui-overflow-ellipsis,
+        .ui-truncate {
+            text-overflow: ellipsis
+        }
+
+        .ui-whitespace-nowrap {
+            white-space: nowrap
+        }
+
+        .ui-rounded-\[10px\] {
+            border-radius: 10px
+        }
+
+        .ui-rounded-\[12px\] {
+            border-radius: 12px
+        }
+
+        .ui-rounded-\[14px\] {
+            border-radius: 14px
+        }
+
+        .ui-rounded-\[28px\] {
+            border-radius: 28px
+        }
+
+        .ui-rounded-\[6px\] {
+            border-radius: 6px
+        }
+
+        .ui-rounded-\[8px\] {
+            border-radius: 8px
+        }
+
+        .ui-rounded-\[9px\] {
+            border-radius: 9px
+        }
+
+        .ui-rounded-full {
+            border-radius: 9999px
+        }
+
+        .ui-rounded-lg {
+            border-radius: .5rem
+        }
+
+        .ui-rounded-md {
+            border-radius: .375rem
+        }
+
+        .ui-rounded-xl {
+            border-radius: .75rem
+        }
+
+        .\!ui-rounded-t-\[28px\] {
+            border-top-left-radius: 28px !important;
+            border-top-right-radius: 28px !important
+        }
+
+        .ui-border,
+        .ui-border-\[1px\] {
+            border-width: 1px
+        }
+
+        .ui-border-b-\[1px\] {
+            border-bottom-width: 1px
+        }
+
+        .ui-border-solid {
+            border-style: solid
+        }
+
+        .ui-border-base-3 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-blue-1 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-graphic-base-3 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-graphic-base-3)/var(--twc-graphic-base-3-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-red-1 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-second-1 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-1)/var(--twc-second-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-second-3 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-3)/var(--twc-second-3-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-transparent {
+            border-color: transparent
+        }
+
+        .\!ui-bg-background-1 {
+            --tw-bg-opacity: 1 !important;
+            background-color: hsl(var(--twc-background-1)/var(--twc-background-1-opacity, var(--tw-bg-opacity))) !important
+        }
+
+        .\!ui-bg-black\/50 {
+            background-color: rgba(0, 0, 0, .5) !important
+        }
+
+        .\!ui-bg-orange-1\/10 {
+            background-color: hsl(var(--twc-orange-1)/.1) !important
+        }
+
+        .\!ui-bg-red-1\/10 {
+            background-color: hsl(var(--twc-red-1)/.1) !important
+        }
+
+        .ui-bg-base-2 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-black {
+            --tw-bg-opacity: 1;
+            background-color: rgb(0 0 0/var(--tw-bg-opacity))
+        }
+
+        .ui-bg-black\/50 {
+            background-color: rgba(0, 0, 0, .5)
+        }
+
+        .ui-bg-blue-1 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-blue-1\/10 {
+            background-color: hsl(var(--twc-blue-1)/.1)
+        }
+
+        .ui-bg-graphic-base-3 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-base-3)/var(--twc-graphic-base-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-graphic-red-1 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-red-1)/var(--twc-graphic-red-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-graphic-second-2 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-2)/var(--twc-graphic-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-graphic-second-4 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-4)/var(--twc-graphic-second-4-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-graphic-second-7 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-7)/var(--twc-graphic-second-7-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-graphic-second-8 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-8)/var(--twc-graphic-second-8-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-green-1 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-green-1)/var(--twc-green-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-red-1 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-red-1\/10 {
+            background-color: hsl(var(--twc-red-1)/.1)
+        }
+
+        .ui-bg-second-1 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-1)/var(--twc-second-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-second-2 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-second-3 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-3)/var(--twc-second-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-second-4 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-4)/var(--twc-second-4-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-second-5 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-5)/var(--twc-second-5-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-transparent {
+            background-color: transparent
+        }
+
+        .ui-bg-white {
+            --tw-bg-opacity: 1;
+            background-color: rgb(255 255 255/var(--tw-bg-opacity))
+        }
+
+        .ui-bg-opacity-0 {
+            --tw-bg-opacity: 0
+        }
+
+        .ui-bg-opacity-10 {
+            --tw-bg-opacity: 0.1
+        }
+
+        .ui-p-0 {
+            padding: 0
+        }
+
+        .ui-p-0\.5 {
+            padding: .125rem
+        }
+
+        .ui-p-1\.5 {
+            padding: .375rem
+        }
+
+        .ui-p-2 {
+            padding: .5rem
+        }
+
+        .ui-p-2\.5 {
+            padding: .625rem
+        }
+
+        .ui-p-4 {
+            padding: 1rem
+        }
+
+        .ui-p-\[2px\] {
+            padding: 2px
+        }
+
+        .ui-p-\[6px\] {
+            padding: 6px
+        }
+
+        .\!ui-px-0 {
+            padding-left: 0 !important;
+            padding-right: 0 !important
+        }
+
+        .ui-px-1 {
+            padding-left: .25rem;
+            padding-right: .25rem
+        }
+
+        .ui-px-2 {
+            padding-left: .5rem;
+            padding-right: .5rem
+        }
+
+        .ui-px-2\.5 {
+            padding-left: .625rem;
+            padding-right: .625rem
+        }
+
+        .ui-px-3 {
+            padding-left: .75rem;
+            padding-right: .75rem
+        }
+
+        .ui-px-4 {
+            padding-left: 1rem;
+            padding-right: 1rem
+        }
+
+        .ui-px-5 {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem
+        }
+
+        .ui-px-\[3px\] {
+            padding-left: 3px;
+            padding-right: 3px
+        }
+
+        .ui-px-\[8px\] {
+            padding-left: 8px;
+            padding-right: 8px
+        }
+
+        .ui-py-0\.5 {
+            padding-bottom: .125rem;
+            padding-top: .125rem
+        }
+
+        .ui-py-1 {
+            padding-bottom: .25rem;
+            padding-top: .25rem
+        }
+
+        .ui-py-1\.5 {
+            padding-bottom: .375rem;
+            padding-top: .375rem
+        }
+
+        .ui-py-2 {
+            padding-bottom: .5rem;
+            padding-top: .5rem
+        }
+
+        .ui-py-3 {
+            padding-bottom: .75rem;
+            padding-top: .75rem
+        }
+
+        .ui-py-3\.5 {
+            padding-bottom: .875rem;
+            padding-top: .875rem
+        }
+
+        .ui-py-4 {
+            padding-bottom: 1rem;
+            padding-top: 1rem
+        }
+
+        .ui-py-\[18px\] {
+            padding-bottom: 18px;
+            padding-top: 18px
+        }
+
+        .ui-py-\[2px\] {
+            padding-bottom: 2px;
+            padding-top: 2px
+        }
+
+        .ui-py-\[7px\] {
+            padding-bottom: 7px;
+            padding-top: 7px
+        }
+
+        .ui-pb-1 {
+            padding-bottom: .25rem
+        }
+
+        .ui-pb-1\.5 {
+            padding-bottom: .375rem
+        }
+
+        .ui-pb-5 {
+            padding-bottom: 1.25rem
+        }
+
+        .ui-pl-2 {
+            padding-left: .5rem
+        }
+
+        .ui-pt-1 {
+            padding-top: .25rem
+        }
+
+        .ui-pt-2 {
+            padding-top: .5rem
+        }
+
+        .ui-pt-2\.5 {
+            padding-top: .625rem
+        }
+
+        .ui-text-left {
+            text-align: left
+        }
+
+        .ui-text-center {
+            text-align: center
+        }
+
+        .ui-text-\[11px\] {
+            font-size: 11px
+        }
+
+        .ui-text-\[12px\] {
+            font-size: 12px
+        }
+
+        .ui-text-\[13px\] {
+            font-size: 13px
+        }
+
+        .ui-text-\[14px\] {
+            font-size: 14px
+        }
+
+        .ui-text-\[16px\] {
+            font-size: 16px
+        }
+
+        .ui-text-\[32px\] {
+            font-size: 32px
+        }
+
+        .ui-text-\[52px\] {
+            font-size: 52px
+        }
+
+        .ui-text-base {
+            font-size: 1rem;
+            line-height: 1.5rem
+        }
+
+        .ui-text-lg {
+            font-size: 1.125rem;
+            line-height: 1.75rem
+        }
+
+        .ui-text-sm {
+            font-size: .875rem;
+            line-height: 1.25rem
+        }
+
+        .ui-text-xl {
+            font-size: 1.25rem;
+            line-height: 1.75rem
+        }
+
+        .ui-text-xs {
+            font-size: .75rem;
+            line-height: 1rem
+        }
+
+        .ui-font-bold {
+            font-weight: 700
+        }
+
+        .ui-font-medium {
+            font-weight: 500
+        }
+
+        .ui-font-semibold {
+            font-weight: 600
+        }
+
+        .ui-capitalize {
+            text-transform: capitalize
+        }
+
+        .ui-leading-4 {
+            line-height: 1rem
+        }
+
+        .ui-leading-5 {
+            line-height: 1.25rem
+        }
+
+        .ui-leading-\[15px\] {
+            line-height: 15px
+        }
+
+        .ui-leading-\[16px\] {
+            line-height: 16px
+        }
+
+        .ui-leading-\[18px\] {
+            line-height: 18px
+        }
+
+        .ui-leading-\[20px\] {
+            line-height: 20px
+        }
+
+        .ui-leading-\[22px\] {
+            line-height: 22px
+        }
+
+        .ui-leading-\[48px\] {
+            line-height: 48px
+        }
+
+        .ui-leading-none {
+            line-height: 1
+        }
+
+        .\!ui-text-base-1 {
+            --tw-text-opacity: 1 !important;
+            color: hsl(var(--twc-base-1)/var(--twc-base-1-opacity, var(--tw-text-opacity))) !important
+        }
+
+        .ui-text-background-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-background-1)/var(--twc-background-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-base-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-1)/var(--twc-base-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-base-2 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-base-3 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-base-4 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-4)/var(--twc-base-4-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-black-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-black-1)/var(--twc-black-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-black-2 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-black-2)/var(--twc-black-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-blue-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-graphic-base-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-graphic-base-1)/var(--twc-graphic-base-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-green-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-green-1)/var(--twc-green-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-orange-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-orange-1)/var(--twc-orange-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-red-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-rose-600 {
+            --tw-text-opacity: 1;
+            color: rgb(225 29 72/var(--tw-text-opacity))
+        }
+
+        .ui-text-white {
+            --tw-text-opacity: 1;
+            color: rgb(255 255 255/var(--tw-text-opacity))
+        }
+
+        .ui-no-underline {
+            text-decoration-line: none
+        }
+
+        .\!ui-shadow-none {
+            --tw-shadow: 0 0 #0000 !important;
+            --tw-shadow-colored: 0 0 #0000 !important;
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important
+        }
+
+        .ui-shadow-\[0_12px_60px_rgba\(31\,_31\,_36\,_0\.25\)\] {
+            --tw-shadow: 0 12px 60px rgba(31, 31, 36, .25);
+            --tw-shadow-colored: 0 12px 60px var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+        }
+
+        .ui-shadow-\[0_4px_10px_rgba\(25\,_26\,_28\,_0\.12\)\] {
+            --tw-shadow: 0 4px 10px rgba(25, 26, 28, .12);
+            --tw-shadow-colored: 0 4px 10px var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+        }
+
+        .ui-shadow-\[0_6px_16px_0_rgba\(0\,0\,0\,0\.2\)\] {
+            --tw-shadow: 0 6px 16px 0 rgba(0, 0, 0, .2);
+            --tw-shadow-colored: 0 6px 16px 0 var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+        }
+
+        .ui-outline-none {
+            outline: 2px solid transparent;
+            outline-offset: 2px
+        }
+
+        .ui-outline {
+            outline-style: solid
+        }
+
+        .ui-outline-0 {
+            outline-width: 0
+        }
+
+        .ui-outline-2 {
+            outline-width: 2px
+        }
+
+        .ui-outline-base-3 {
+            outline-color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, 1))
+        }
+
+        .ui-transition {
+            transition-duration: .15s;
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ui-transition-\[max-height\] {
+            transition-duration: .15s;
+            transition-property: max-height;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ui-transition-all {
+            transition-duration: .15s;
+            transition-property: all;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ui-transition-transform {
+            transition-duration: .15s;
+            transition-property: transform;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ui-duration-300 {
+            transition-duration: .3s
+        }
+
+        .ui-duration-\[100ms\] {
+            transition-duration: .1s
+        }
+
+        .ui-duration-\[220ms\] {
+            transition-duration: .22s
+        }
+
+        .ui-ease-in-out {
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ui-will-change-\[transform\,opacity\] {
+            will-change: transform, opacity
+        }
+
+        .ui-will-change-transform {
+            will-change: transform
+        }
+
+        .ui-theme-light,
+        [data-theme=light] {
+            --twc-background-1: 0 0% 100%;
+            --twc-background-2: 240 7.7% 97.5%;
+            --twc-black-1: 0 0% 0%;
+            --twc-black-2: 240 7.5% 13.1%;
+            --twc-base-1: 240 7.5% 13.1%;
+            --twc-base-2: 0 0% 52.2%;
+            --twc-base-3: 0 0% 64.3%;
+            --twc-base-4: 0 0% 100%;
+            --twc-second-1: 0 0% 91%;
+            --twc-second-2: 0 0% 94.1%;
+            --twc-second-3: 0 0% 98%;
+            --twc-second-4: 0 0% 100%;
+            --twc-second-5: 0 0% 0%;
+            --twc-green-1: 143.8 70.9% 40.4%;
+            --twc-green-2: 143.8 63.5% 45.1%;
+            --twc-green-3: 143.8 70.9% 40.4%;
+            --twc-green-3-opacity: 0.60;
+            --twc-red-1: 343.1 81.2% 48%;
+            --twc-red-2: 343.1 82.6% 52.7%;
+            --twc-blue-1: 216 100% 50%;
+            --twc-blue-2: 216.20000000000005 100% 55.1%;
+            --twc-blue-3: 216 100% 50%;
+            --twc-orange-1: 28.600000000000023 100% 45.3%;
+            --twc-orange-2: 28.600000000000023 90.6% 50%;
+            --twc-orange-3: 28.69999999999999 81.5% 48.8%;
+            --twc-graphic-base-1: 0 0% 26.7%;
+            --twc-graphic-base-2: 0 0% 50.6%;
+            --twc-graphic-base-3: 0 0% 64.3%;
+            --twc-graphic-base-4: 0 0% 100%;
+            --twc-graphic-second-1: 0 0% 92.5%;
+            --twc-graphic-second-2: 0 0% 94.1%;
+            --twc-graphic-second-3: 0 0% 98%;
+            --twc-graphic-second-4: 0 0% 100%;
+            --twc-graphic-second-5: 0 0% 0%;
+            --twc-graphic-second-6: 0 0% 100%;
+            --twc-graphic-second-7: 0 0% 98%;
+            --twc-graphic-second-8: 0 0% 94.1%;
+            --twc-graphic-green-1: 143.8 70.9% 40.4%;
+            --twc-graphic-green-2: 143.8 63.5% 45.1%;
+            --twc-graphic-red-1: 343.1 81.2% 48%;
+            --twc-graphic-red-2: 343.1 82.6% 52.7%;
+            --twc-graphic-blue-1: 216 100% 50%;
+            --twc-graphic-blue-2: 216.20000000000005 100% 55.1%;
+            --twc-graphic-orange-1: 28.600000000000023 100% 45.3%;
+            --twc-graphic-orange-2: 28.600000000000023 90.6% 50%
+        }
+
+        .ui-theme-dark,
+        [data-theme=dark] {
+            --twc-background-1: 0 0% 8.6%;
+            --twc-background-2: 0 0% 11%;
+            --twc-black-1: 0 0% 100%;
+            --twc-black-2: 240 7.5% 13.1%;
+            --twc-base-1: 0 0% 98.4%;
+            --twc-base-2: 0 0% 72.9%;
+            --twc-base-3: 0 0% 32.5%;
+            --twc-base-4: 0 0% 100%;
+            --twc-second-1: 0 0% 18.8%;
+            --twc-second-2: 0 0% 14.5%;
+            --twc-second-3: 0 0% 11%;
+            --twc-second-4: 0 0% 9.4%;
+            --twc-second-5: 0 0% 100%;
+            --twc-green-1: 144.3 52.8% 44.9%;
+            --twc-green-2: 144.3 48.6% 48.8%;
+            --twc-green-3: 143.8 70.9% 40.4%;
+            --twc-green-3-opacity: 0.60;
+            --twc-red-1: 344.4 90.4% 59%;
+            --twc-red-2: 344.4 100% 60.8%;
+            --twc-blue-1: 216 100% 50%;
+            --twc-blue-2: 216.20000000000005 100% 55.1%;
+            --twc-blue-3: 216 100% 50%;
+            --twc-orange-1: 28.600000000000023 92.2% 54.9%;
+            --twc-orange-2: 28.69999999999999 100% 58.6%;
+            --twc-orange-3: 28.600000000000023 92.2% 54.9%;
+            --twc-graphic-base-1: 0 0% 98.4%;
+            --twc-graphic-base-2: 0 0% 72.9%;
+            --twc-graphic-base-3: 0 0% 32.5%;
+            --twc-graphic-base-4: 0 0% 100%;
+            --twc-graphic-second-1: 0 0% 18.8%;
+            --twc-graphic-second-2: 0 0% 14.5%;
+            --twc-graphic-second-3: 0 0% 11%;
+            --twc-graphic-second-4: 0 0% 9.4%;
+            --twc-graphic-second-5: 0 0% 100%;
+            --twc-graphic-second-6: 0 0% 14.5%;
+            --twc-graphic-second-7: 0 0% 18.8%;
+            --twc-graphic-second-8: 0 0% 13.7%;
+            --twc-graphic-green-1: 144.3 52.8% 44.9%;
+            --twc-graphic-green-2: 144.3 48.6% 48.8%;
+            --twc-graphic-red-1: 344.4 90.4% 59%;
+            --twc-graphic-red-2: 344.4 100% 60.8%;
+            --twc-graphic-blue-1: 216 100% 50%;
+            --twc-graphic-blue-2: 216.20000000000005 100% 55.1%;
+            --twc-graphic-orange-1: 28.600000000000023 92.2% 54.9%;
+            --twc-graphic-orange-2: 28.69999999999999 100% 58.6%
+        }
+
+        .\[appearance\:textfield\] {
+            -webkit-appearance: textfield;
+            -moz-appearance: textfield;
+            appearance: textfield
+        }
+
+        .\*\:\!ui-text-base-3>* {
+            --tw-text-opacity: 1 !important;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity))) !important
+        }
+
+        .placeholder\:ui-text-base-2::-moz-placeholder {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .placeholder\:ui-text-base-2::placeholder {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .placeholder\:ui-text-base-3::-moz-placeholder {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .placeholder\:ui-text-base-3::placeholder {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .first\:ui-rounded-l-\[8px\]:first-child {
+            border-bottom-left-radius: 8px;
+            border-top-left-radius: 8px
+        }
+
+        .first\:ui-border-r-0:first-child {
+            border-right-width: 0
+        }
+
+        .last\:ui-mb-0:last-child {
+            margin-bottom: 0
+        }
+
+        .last\:ui-rounded-r-\[8px\]:last-child {
+            border-bottom-right-radius: 8px;
+            border-top-right-radius: 8px
+        }
+
+        .last\:ui-border-l-0:last-child {
+            border-left-width: 0
+        }
+
+        .focus-within\:ui-border-blue-1:focus-within {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .hover\:ui-border-blue-1:hover {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .hover\:ui-border-second-1:hover {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-1)/var(--twc-second-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .hover\:ui-bg-blue-1:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-blue-1\/20:hover {
+            background-color: hsl(var(--twc-blue-1)/.2)
+        }
+
+        .hover\:ui-bg-blue-2:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-blue-2)/var(--twc-blue-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-graphic-second-1:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-1)/var(--twc-graphic-second-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-graphic-second-2:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-2)/var(--twc-graphic-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-green-2:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-green-2)/var(--twc-green-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-red-1\/20:hover {
+            background-color: hsl(var(--twc-red-1)/.2)
+        }
+
+        .hover\:ui-bg-red-2:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-red-2)/var(--twc-red-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-second-2:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-second-3:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-3)/var(--twc-second-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-text-base-2:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .hover\:ui-text-base-3:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .hover\:ui-text-black-1:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-black-1)/var(--twc-black-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .hover\:ui-text-blue-1:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .hover\:ui-text-blue-2:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-2)/var(--twc-blue-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .hover\:ui-text-blue-3:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-3)/var(--twc-blue-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .focus-visible\:ui-border-blue-1:focus-visible {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .active\:ui-border-blue-2:active {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-2)/var(--twc-blue-2-opacity, var(--tw-border-opacity)))
+        }
+
+        .active\:ui-bg-blue-1\/20:active {
+            background-color: hsl(var(--twc-blue-1)/.2)
+        }
+
+        .active\:ui-bg-blue-3:active {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-blue-3)/var(--twc-blue-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .active\:ui-bg-graphic-second-2:active {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-2)/var(--twc-graphic-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .active\:ui-bg-green-3:active {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-green-3)/var(--twc-green-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .active\:ui-bg-red-1\/20:active {
+            background-color: hsl(var(--twc-red-1)/.2)
+        }
+
+        .active\:ui-bg-second-3:active {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-3)/var(--twc-second-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .active\:ui-text-base-2:active {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .active\:ui-text-blue-3:active {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-3)/var(--twc-blue-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .disabled\:ui-cursor-not-allowed:disabled {
+            cursor: not-allowed
+        }
+
+        .disabled\:ui-border-second-2:disabled {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-border-opacity)))
+        }
+
+        .disabled\:ui-bg-second-2:disabled {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .disabled\:ui-bg-transparent:disabled {
+            background-color: transparent
+        }
+
+        .disabled\:ui-text-base-3:disabled {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-group:focus .group-focus\:ui-text-white {
+            --tw-text-opacity: 1;
+            color: rgb(255 255 255/var(--tw-text-opacity))
+        }
+
+        .aria-disabled\:ui-cursor-default[aria-disabled=true] {
+            cursor: default
+        }
+
+        .aria-disabled\:ui-bg-second-2[aria-disabled=true] {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .aria-disabled\:ui-text-base-3[aria-disabled=true] {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .aria-selected\:ui-rounded-\[8px\][aria-selected=true] {
+            border-radius: 8px
+        }
+
+        .aria-selected\:ui-rounded-full[aria-selected=true] {
+            border-radius: 9999px
+        }
+
+        .aria-selected\:ui-bg-second-2[aria-selected=true] {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .aria-selected\:ui-bg-second-4[aria-selected=true] {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-4)/var(--twc-second-4-opacity, var(--tw-bg-opacity)))
+        }
+
+        .aria-selected\:ui-text-base-1[aria-selected=true] {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-1)/var(--twc-base-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .aria-selected\:ui-text-blue-1[aria-selected=true] {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .aria-selected\:ui-shadow-\[0_6px_10px_0_rgba\(0\2c 0\2c 0\2c 0\.05\)\][aria-selected=true] {
+            --tw-shadow: 0 6px 10px 0 rgba(0, 0, 0, .05);
+            --tw-shadow-colored: 0 6px 10px 0 var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+        }
+
+        .aria-selected\:ui-shadow-md[aria-selected=true] {
+            --tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1);
+            --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+        }
+
+        .aria-\[invalid\=true\]\:ui-border-red-1[aria-invalid=true] {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .hover\:aria-\[disabled\=false\]\:ui-border-second-1[aria-disabled=false]:hover,
+        .hover\:aria-\[invalid\=false\]\:aria-\[disabled\=false\]\:ui-border-second-1[aria-disabled=false][aria-invalid=false]:hover {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-1)/var(--twc-second-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .hover\:aria-\[disabled\=false\]\:focus-within\:ui-border-blue-1:focus-within[aria-disabled=false]:hover {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .data-\[state\=inactive\]\:ui-hidden[data-state=inactive] {
+            display: none
+        }
+
+        .data-\[state\=checked\]\:ui-translate-x-\[19px\][data-state=checked] {
+            --tw-translate-x: 19px
+        }
+
+        .data-\[state\=checked\]\:ui-translate-x-\[19px\][data-state=checked],
+        .data-\[state\=checked\]\:ui-translate-x-\[31px\][data-state=checked] {
+            transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+        }
+
+        .data-\[state\=checked\]\:ui-translate-x-\[31px\][data-state=checked] {
+            --tw-translate-x: 31px
+        }
+
+        .data-\[state\=checked\]\:ui-border-blue-1[data-state=checked] {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .data-\[state\=unchecked\]\:\!ui-border-red-1[data-state=unchecked] {
+            --tw-border-opacity: 1 !important;
+            border-color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-border-opacity))) !important
+        }
+
+        .data-\[state\=checked\]\:ui-bg-blue-1[data-state=checked] {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .data-\[state\=active\]\:ui-text-base-1[data-state=active] {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-1)/var(--twc-base-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .disabled\:data-\[state\=checked\]\:ui-border-second-2[data-state=checked]:disabled {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-border-opacity)))
+        }
+
+        .disabled\:data-\[state\=checked\]\:ui-bg-second-2[data-state=checked]:disabled {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .disabled\:data-\[state\=checked\]\:ui-text-base-3[data-state=checked]:disabled {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        @media (pointer:fine) {
+            .desktop\:enabled\:hover\:ui-bg-blue-1:hover:enabled {
+                --tw-bg-opacity: 1;
+                background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)))
+            }
+
+            .desktop\:enabled\:hover\:ui-text-base-4:hover:enabled {
+                --tw-text-opacity: 1;
+                color: hsl(var(--twc-base-4)/var(--twc-base-4-opacity, var(--tw-text-opacity)))
+            }
+        }
+
+        .\[\&\:\:-webkit-inner-spin-button\]\:ui-appearance-none::-webkit-inner-spin-button,
+        .\[\&\:\:-webkit-outer-spin-button\]\:ui-appearance-none::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            appearance: none
+        }
+
+        .\[\&\:not\(\:empty\)\]\:ui-px-5:not(:empty) {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem
+        }
+
+        .\[\&\:not\(\:empty\)\]\:ui-pb-5:not(:empty) {
+            padding-bottom: 1.25rem
+        }
+
+        .\[\&\:not\(\:empty\)\]\:ui-pt-4:not(:empty) {
+            padding-top: 1rem
+        }
+
+        .\[\&\>\*\]\:\[\&\>\*\]\:ui-fill-base-2>*>* {
+            fill: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, 1))
+        }
+
+        .\[\&\>\*\]\:\[\&\>\*\]\:ui-transition-all>*>* {
+            transition-duration: .15s;
+            transition-property: all;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .\[\&\>\*\]\:\[\&\>\*\]\:data-\[state\=checked\]\:ui-fill-black-1[data-state=checked]>*>*,
+        .\[\&\>\*\]\:\[\&\>\*\]\:data-\[state\=unchecked\]\:ui-fill-black-1[data-state=unchecked]>*>* {
+            fill: hsl(var(--twc-black-1)/var(--twc-black-1-opacity, 1))
+        }
+
+        .\[\&\>input\]\:ui-border-\[1px\]>input {
+            border-width: 1px
+        }
+
+        .\[\&\>input\]\:ui-border-solid>input {
+            border-style: solid
+        }
+
+        .\[\&\>input\]\:ui-border-red-1>input {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .\[\&\>svg\]\:ui-size-5>svg {
+            height: 1.25rem;
+            width: 1.25rem
+        }
+    </style>
+    <style type="text/css">
+        /*! tailwindcss v3.4.11 | MIT License | https://tailwindcss.com*/
+        *,
+        :after,
+        :before {
+            border: 0 solid #e5e7eb;
+            box-sizing: border-box
+        }
+
+        :after,
+        :before {
+            --tw-content: ""
+        }
+
+        :host,
+        html {
+            -webkit-text-size-adjust: 100%;
+            font-feature-settings: normal;
+            -webkit-tap-highlight-color: transparent;
+            font-family: ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+            font-variation-settings: normal;
+            line-height: 1.5;
+            -moz-tab-size: 4;
+            -o-tab-size: 4;
+            tab-size: 4
+        }
+
+        body {
+            line-height: inherit;
+            margin: 0
+        }
+
+        hr {
+            border-top-width: 1px;
+            color: inherit;
+            height: 0
+        }
+
+        abbr:where([title]) {
+            -webkit-text-decoration: underline dotted;
+            text-decoration: underline dotted
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-size: inherit;
+            font-weight: inherit
+        }
+
+        a {
+            color: inherit;
+            text-decoration: inherit
+        }
+
+        b,
+        strong {
+            font-weight: bolder
+        }
+
+        code,
+        kbd,
+        pre,
+        samp {
+            font-feature-settings: normal;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+            font-size: 1em;
+            font-variation-settings: normal
+        }
+
+        small {
+            font-size: 80%
+        }
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative;
+            vertical-align: baseline
+        }
+
+        sub {
+            bottom: -.25em
+        }
+
+        sup {
+            top: -.5em
+        }
+
+        table {
+            border-collapse: collapse;
+            border-color: inherit;
+            text-indent: 0
+        }
+
+        button,
+        input,
+        optgroup,
+        select,
+        textarea {
+            font-feature-settings: inherit;
+            color: inherit;
+            font-family: inherit;
+            font-size: 100%;
+            font-variation-settings: inherit;
+            font-weight: inherit;
+            letter-spacing: inherit;
+            line-height: inherit;
+            margin: 0;
+            padding: 0
+        }
+
+        button,
+        select {
+            text-transform: none
+        }
+
+        button,
+        input:where([type=button]),
+        input:where([type=reset]),
+        input:where([type=submit]) {
+            -webkit-appearance: button;
+            background-color: transparent;
+            background-image: none
+        }
+
+        :-moz-focusring {
+            outline: auto
+        }
+
+        :-moz-ui-invalid {
+            box-shadow: none
+        }
+
+        progress {
+            vertical-align: baseline
+        }
+
+        ::-webkit-inner-spin-button,
+        ::-webkit-outer-spin-button {
+            height: auto
+        }
+
+        [type=search] {
+            -webkit-appearance: textfield;
+            outline-offset: -2px
+        }
+
+        ::-webkit-search-decoration {
+            -webkit-appearance: none
+        }
+
+        ::-webkit-file-upload-button {
+            -webkit-appearance: button;
+            font: inherit
+        }
+
+        summary {
+            display: list-item
+        }
+
+        blockquote,
+        dd,
+        dl,
+        figure,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        hr,
+        p,
+        pre {
+            margin: 0
+        }
+
+        fieldset {
+            margin: 0
+        }
+
+        fieldset,
+        legend {
+            padding: 0
+        }
+
+        menu,
+        ol,
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0
+        }
+
+        dialog {
+            padding: 0
+        }
+
+        textarea {
+            resize: vertical
+        }
+
+        input::-moz-placeholder,
+        textarea::-moz-placeholder {
+            color: #9ca3af;
+            opacity: 1
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #9ca3af;
+            opacity: 1
+        }
+
+        [role=button],
+        button {
+            cursor: pointer
+        }
+
+        :disabled {
+            cursor: default
+        }
+
+        audio,
+        canvas,
+        embed,
+        iframe,
+        img,
+        object,
+        svg,
+        video {
+            display: block;
+            vertical-align: middle
+        }
+
+        img,
+        video {
+            height: auto;
+            max-width: 100%
+        }
+
+        [hidden] {
+            display: none
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 2rem
+        }
+
+        h2 {
+            font-size: 1.25rem
+        }
+
+        h2,
+        h3 {
+            line-height: 1.75rem
+        }
+
+        h3 {
+            font-size: 1.125rem
+        }
+
+        a {
+            --tw-text-opacity: 1;
+            color: rgb(37 99 235/var(--tw-text-opacity));
+            text-decoration-line: underline
+        }
+
+        *,
+        :after,
+        :before {
+            --tw-border-spacing-x: 0;
+            --tw-border-spacing-y: 0;
+            --tw-translate-x: 0;
+            --tw-translate-y: 0;
+            --tw-rotate: 0;
+            --tw-skew-x: 0;
+            --tw-skew-y: 0;
+            --tw-scale-x: 1;
+            --tw-scale-y: 1;
+            --tw-pan-x: ;
+            --tw-pan-y: ;
+            --tw-pinch-zoom: ;
+            --tw-scroll-snap-strictness: proximity;
+            --tw-gradient-from-position: ;
+            --tw-gradient-via-position: ;
+            --tw-gradient-to-position: ;
+            --tw-ordinal: ;
+            --tw-slashed-zero: ;
+            --tw-numeric-figure: ;
+            --tw-numeric-spacing: ;
+            --tw-numeric-fraction: ;
+            --tw-ring-inset: ;
+            --tw-ring-offset-width: 0px;
+            --tw-ring-offset-color: #fff;
+            --tw-ring-color: rgba(59, 130, 246, .5);
+            --tw-ring-offset-shadow: 0 0 #0000;
+            --tw-ring-shadow: 0 0 #0000;
+            --tw-shadow: 0 0 #0000;
+            --tw-shadow-colored: 0 0 #0000;
+            --tw-blur: ;
+            --tw-brightness: ;
+            --tw-contrast: ;
+            --tw-grayscale: ;
+            --tw-hue-rotate: ;
+            --tw-invert: ;
+            --tw-saturate: ;
+            --tw-sepia: ;
+            --tw-drop-shadow: ;
+            --tw-backdrop-blur: ;
+            --tw-backdrop-brightness: ;
+            --tw-backdrop-contrast: ;
+            --tw-backdrop-grayscale: ;
+            --tw-backdrop-hue-rotate: ;
+            --tw-backdrop-invert: ;
+            --tw-backdrop-opacity: ;
+            --tw-backdrop-saturate: ;
+            --tw-backdrop-sepia: ;
+            --tw-contain-size: ;
+            --tw-contain-layout: ;
+            --tw-contain-paint: ;
+            --tw-contain-style:
+        }
+
+        ::backdrop {
+            --tw-border-spacing-x: 0;
+            --tw-border-spacing-y: 0;
+            --tw-translate-x: 0;
+            --tw-translate-y: 0;
+            --tw-rotate: 0;
+            --tw-skew-x: 0;
+            --tw-skew-y: 0;
+            --tw-scale-x: 1;
+            --tw-scale-y: 1;
+            --tw-pan-x: ;
+            --tw-pan-y: ;
+            --tw-pinch-zoom: ;
+            --tw-scroll-snap-strictness: proximity;
+            --tw-gradient-from-position: ;
+            --tw-gradient-via-position: ;
+            --tw-gradient-to-position: ;
+            --tw-ordinal: ;
+            --tw-slashed-zero: ;
+            --tw-numeric-figure: ;
+            --tw-numeric-spacing: ;
+            --tw-numeric-fraction: ;
+            --tw-ring-inset: ;
+            --tw-ring-offset-width: 0px;
+            --tw-ring-offset-color: #fff;
+            --tw-ring-color: rgba(59, 130, 246, .5);
+            --tw-ring-offset-shadow: 0 0 #0000;
+            --tw-ring-shadow: 0 0 #0000;
+            --tw-shadow: 0 0 #0000;
+            --tw-shadow-colored: 0 0 #0000;
+            --tw-blur: ;
+            --tw-brightness: ;
+            --tw-contrast: ;
+            --tw-grayscale: ;
+            --tw-hue-rotate: ;
+            --tw-invert: ;
+            --tw-saturate: ;
+            --tw-sepia: ;
+            --tw-drop-shadow: ;
+            --tw-backdrop-blur: ;
+            --tw-backdrop-brightness: ;
+            --tw-backdrop-contrast: ;
+            --tw-backdrop-grayscale: ;
+            --tw-backdrop-hue-rotate: ;
+            --tw-backdrop-invert: ;
+            --tw-backdrop-opacity: ;
+            --tw-backdrop-saturate: ;
+            --tw-backdrop-sepia: ;
+            --tw-contain-size: ;
+            --tw-contain-layout: ;
+            --tw-contain-paint: ;
+            --tw-contain-style:
+        }
+
+        input:focus {
+            border: 0;
+            outline: 0 none
+        }
+
+        ::-webkit-scrollbar {
+            border-radius: .75rem;
+            height: 3px;
+            width: 3px
+        }
+
+        ::-webkit-scrollbar-track {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        ::-webkit-scrollbar-thumb {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-bg-opacity)));
+            border-radius: .75rem;
+            cursor: pointer
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:active,
+        input:-webkit-autofill:first-line,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:hover {
+            -webkit-box-shadow: 0 0 0 30px hsl(var(--twc-second-3)/var(--twc-second-3-opacity, 1)) inset !important
+        }
+
+        .theme-dark input:-webkit-autofill {
+            -webkit-text-fill-color: #fff
+        }
+
+        .theme-dark input:disabled {
+            -webkit-text-fill-color: #5b5b5b
+        }
+
+        .theme-light input:disabled {
+            -webkit-text-fill-color: #a4a4a4
+        }
+
+        .theme-light input:-webkit-autofill {
+            -webkit-text-fill-color: #444
+        }
+
+        .ui-scrollbar-hide::-webkit-scrollbar {
+            display: none
+        }
+
+        .ui-scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none
+        }
+
+        .ui-no-space-style::-webkit-scrollbar {
+            display: none
+        }
+
+        .ui-no-space-style {
+            -ms-overflow-style: none;
+            scrollbar-width: none
+        }
+    </style>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#161616">
+    <meta name="description"
+        content="Криптобиржа HIEX - удобная и безопасная биржа криптовалют, которая позволяет торговать: покупать, продавать, хранить и обменивать криптовалюту на фиат в России.">
+    <meta name="keywords" content="Криптобиржа,Биржа криптовалют, Биржа виртуальных активов">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="next-head-count" content="6">
+    <link rel="shortcut icon" type="image/x-icon" href="https://abcex.io/favicon.ico">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/0ee3dd8d59e42f8c-s.p.woff2" as="font" type="font/woff2"
+        crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/66d28f42ef3fac80-s.p.woff2" as="font" type="font/woff2"
+        crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/2a185a06ef1c8a2e-s.p.woff2" as="font" type="font/woff2"
+        crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/17b366a27aa471fc-s.p.woff2" as="font" type="font/woff2"
+        crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/e76d14d3469bbd9c-s.p.woff2" as="font" type="font/woff2"
+        crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/f76960e026b71d6a-s.p.woff2" as="font" type="font/woff2"
+        crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/css/d887839d630d0dab.css" as="style">
+    <link rel="stylesheet" href="https://abcex.io/client/_next/static/css/d887839d630d0dab.css" data-n-g=""><noscript
+        data-n-css=""></noscript>
+    <script type="text/javascript" async="" src="https://widget.intercom.io/widget/co8fii7u"></script>
+    <script defer="" nomodule="" src="/client/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js"></script>
+    <script src="/client/_next/static/chunks/webpack-29cc1d77a819138f.js" defer=""></script>
+    <script src="/client/_next/static/chunks/framework-cba7dc4f657553d5.js" defer=""></script>
+    <script src="/client/_next/static/chunks/main-ccfc90f0b4a3e251.js" defer=""></script>
+    <script src="/client/_next/static/chunks/pages/_app-027996d79d8e5ddf.js" defer=""></script>
+    <script src="/client/_next/static/chunks/9053-88a4f017e13aa80a.js" defer=""></script>
+    <script src="/client/_next/static/chunks/pages/agreements/terms-of-use-a201562acbadc282.js" defer=""></script>
+    <script src="/client/_next/static/4olc8hC05XfpYtwj75_MN/_buildManifest.js" defer=""></script>
+    <script src="/client/_next/static/4olc8hC05XfpYtwj75_MN/_ssgManifest.js" defer=""></script>
+    <style type="text/css" data-styled-jsx="">
+        html {
+            font-family: '__manrope_72b8c0', '__manrope_Fallback_72b8c0' !important
+        }
+    </style>
+    <title>Условия использования</title>
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/pages/index-8b1a229401e05615.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/496-0d4889eb49faaa1b.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/4038-af849dcd286473fc.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/pages/exchange-531dbb7902f17009.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/7262-7d587feff5a0d04e.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/pages/p2p-c4064ced65c252d4.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/pages/assets-54c386990bc07a57.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/pages/profile-878911f749f11736.js">
+</head>
+
+<body class="theme-dark">
+    <div id="__next">
+        <div>
+            <script type="text/javascript" async="" src="https://mc.yandex.ru/metrika/watch.js"></script>
+        </div>
+        <div class="Toastify"></div>
+        <div class="flex flex-col min-h-screen">
+            <div class="app-container flex flex-col flex-1">
+                <div class="h-full flex flex-col gap-6 px-[45px] pt-8 pb-4 max-w-[1920px] w-full flex-1">
+                    <div class="main relative flex-1 flex flex-col">
+                        <div class="max-w-[768px] m-auto bg-background-1 [&amp;>*]:text-base-1">
+                            <h1>Terms of Use</h1>
+                            <h2 class="my-4" id="parties">Parties</h2>
+                            <hr class="my-2">
+                            <ol>
+                                <li>HIEX LLC (hereinafter referred to as 'this Website' or 'the Website'), which is a
+                                    platform dedicated to the transaction of virtual assets and the provision of related
+                                    services (hereinafter referred to as 'the Service'). For the convenience of wording
+                                    in this Agreement, the Company and the Website are referred to collectively as 'we'
+                                    or other applicable forms of first person pronouns in the Agreement.</li>
+                                <li>All natural persons or other subjects who log onto this Website shall be users of
+                                    this Website. For the convenience of wording in the Agreement, the users are
+                                    referred to as 'you' or any other applicable forms of the second-person pronouns.
+                                </li>
+                                <li>For the convenience of wording in the Agreement, you and we are collectively
+                                    referred to as “both parties”, and individually as “one party”.</li>
+                            </ol>
+                            <h2 class="my-4" id="a-eptance-of-terms-of-use">Aссeptance of Terms of Use</h2>
+                            <hr class="my-2">
+                            <p>This Agreement consists of the main body, Privacy Policy, AML/CFT Policies and
+                                procedures, as well as any rules, statements, instructions, etc. that this Website has
+                                published or may publish in the future. By creating an account on the Website or by
+                                using any of the Services, you acknowledge that you have read, understand, and
+                                completely agree to these Terms of Use in effect from time to time. If you do not accept
+                                to be bound by these terms and conditions outlined in this agreement, do not access this
+                                website and do not use this service.</p>
+                            <h2 class="my-4" id="modification-to-terms-of-use">Modification to Terms of Use</h2>
+                            <hr class="my-2">
+                            <p>These Terms of Use may be amended, changed, or updated by us at any time and without
+                                prior notice to you. You should check back often to confirm that your copy and
+                                understanding of these Terms of Use is current and correct. We will provide notice of
+                                these changes by posting the revised Terms to the Website and changing the “Last
+                                updated” date at the top of the Terms, or by emailing users at their provided email
+                                addresses, or by any other means as determined by abcex.io at its sole discretion. Your
+                                non-termination or continued use of any Services after the effective date of any
+                                amendments, changes, or updates constitutes your acceptance of these Terms of Use, as
+                                modified by such amendments, changes, or updates.</p>
+                            <h2 class="my-4" id="registration-and-account">REGISTRATION AND ACCOUNT</h2>
+                            <hr class="my-2">
+                            <p>In order to create an account and use our services, you expressly represent and warrant:
+                                you shall be a natural person, legal person or other organization with the ability to
+                                sign this Agreement and the ability to use the services of this Website; You comply with
+                                the relevant laws of the Website registration country and your home jurisdiction.</p>
+                            <p>You confirm and promise that you do not register with this Website for the purpose of
+                                violating any of the applicable laws or regulations or undermining the order of
+                                cryptocurrency transactions on this Website. You also represent and warrant that you are
+                                not on any terrorist organizations and terrorist activities personnel lists.</p>
+                            <p>You further agree that you will not use any Account other than your own, or access the
+                                Account of any other Member at any time, or assist others in obtaining unauthorized
+                                access.</p>
+                            <p>You agree to provide a valid email address on the user registration page of this Website.
+                                You can use the email address to log in to this Website. Where it is necessary and in
+                                accordance with the requirements of applicable laws and regulations of relevant
+                                jurisdictions, you shall provide your real name, identity card and other information
+                                required by applicable laws, regulations, Privacy Policy, AML/CFT Policies and
+                                procedures, detailed and accurate as is required. All the original typed data will be
+                                referenced as registration information. You shall be responsible for the authenticity,
+                                integrity and accuracy of such information and bear any direct or indirect loss and
+                                adverse consequences arising out of it.</p>
+                            <p>If any of the applicable laws, regulations, rules, orders and other regulatory documents
+                                of the sovereign country or region in which you are based requires that mobile phone
+                                accounts must be based on real names, you hereby confirm that the mobile phone number
+                                you provide for registration purposes has gone through the real-name registration
+                                procedure. If you cannot provide such a mobile phone number as is required, any direct
+                                or indirect losses and adverse consequences arising therefrom and affecting you shall be
+                                borne by you.</p>
+                            <p>After you provide the required registration information in a legal, complete and valid
+                                manner and such information passes relevant verification, you shall have the right to
+                                obtain an account and a password of this Website. Upon obtaining such account and
+                                password, your registration shall be deemed as successful and you can log into this
+                                Website as a member thereof.</p>
+                            <p>You agree to receive emails and/or short messages sent by this Website related to the
+                                management and operation thereof.</p>
+                            <p>You also are responsible for maintaining the confidentiality of your Account information,
+                                including your password, safeguarding your own cryptocurrency, and for all activity
+                                including Transactions that are posted to your Account.</p>
+                            <h2 class="my-4" id="sevices-and-our-rules">SEVICES AND OUR RULES</h2>
+                            <hr class="my-2">
+                            <p>This Website provides virtual assets online transaction platform services, which is for
+                                your personal and non-commercial use only.</p>
+                            <p>We are not responsible for any user falsifying their location in order to gain access to
+                                our services, and any such user shall personally bear the full legal responsibility of
+                                such actions.</p>
+                            <p>You have the right to browse the real-time quotes and transaction information of virtual
+                                assets products on this Website. You have the right to view information under the member
+                                accounts on this Website and to apply the functions provided by this Website. You have
+                                the right to participate in the Website activities organized by this Website. Other
+                                services that this Website promises to offer to you.</p>
+                            <p>This Website does not play a role in the transaction of virtual assets as a buyer or
+                                seller. Traders must open an account and topup virtual assets or fiat prior to
+                                commencement of trading. Traders may request the withdrawal of their virtual assets and
+                                fiat, subject to the limitations as stated in the Terms of Use.</p>
+                            <p>We will strive to provide you with the Service as soon as possible but there are no
+                                guarantees that access will not be interrupted, or that there will be no delays,
+                                failures, errors, omissions or loss of transmitted information. We are vigilant in
+                                maintaining the security of our Website and the Service to protect your account and
+                                asset safety.</p>
+                            <p>The information and content on the website is provided for the sole purpose of assisting
+                                users to make independent decisions. We have taken reasonable measures to ensure the
+                                accuracy of the information on the website, however, we do not guarantee the accuracy,
+                                suitability, reliability, completeness, performance and/or fitness for purpose of the
+                                content of any Services or products available through the website, and will not accept
+                                liability for any loss or damage that may arise directly or indirectly from the content
+                                or your inability to access the Website, for any delay in or failure of the transmission
+                                or the receipt of any instruction or notifications sent through our platform. We will
+                                not have any liability for the use or interpretation of such information.</p>
+                            <p>You shall comply with the provisions of applicable laws, regulations, rules, and policy
+                                requirements, and ensure the legality of the source of all virtual assets in your
+                                account, and shall refrain from engaging in any illegal activities or other activities
+                                that damages the rights and interests of this Website or any third party, such as
+                                sending or receiving information that is illegal, illicit or infringes on the rights and
+                                interests of any other person, sending or receiving pyramid scheme information or
+                                information or remarks causing other harms, unauthorized use or falsification of the
+                                email header information of this Website, inter alia.</p>
+                            <p>If there is suspicious activity related to your Account, we have right to request
+                                additional information from you, including authenticating documents, and to freeze any
+                                transactions pending our review. We will then conduct an investigation and determine
+                                whether to unfreeze the account or permanently close it. During the investigation,
+                                deposits, withdrawals, and trading will be disabled.</p>
+                            <p>For abnormal transactions, market interruption and other abnormal conditions caused by
+                                system failure, network failure and other hacker attacks and other unexpected factors,
+                                we have the right to impose temporary limits on deposits and withdrawals, or cancel the
+                                abnormal transaction results, and rollback all the transactions of a certain period of
+                                time.</p>
+                            <p>You may terminate this agreement with us, and close your Account at any time, following
+                                settlement of any pending transactions.</p>
+                            <h2 class="my-4" id="limitation-of-liability">LIMITATION OF LIABILITY</h2>
+                            <hr class="my-2">
+                            <p>To the extent permitted by law, we will not be held liable for any of the following
+                                damages: loss of income, loss of transaction profits, disruption of business, loss of
+                                opportunity, loss of data, indirect or consequential loss unless the loss suffered
+                                arising from negligence or wilful deceit or fraud.</p>
+                            <p>You understand and agree that we shall not be held liable for any damages caused by any
+                                of the following events: </p>
+                            <ol>
+                                <li>Where we are properly justified in believing that your specific transactions may
+                                    involve any serious violation or breach of law or agreement;</li>
+                                <li>Where we are properly justified in believing that your conduct on this Website is
+                                    suspected of being illegal or improper;</li>
+                                <li>The expenses and losses arising from the purchase or acquisition of any data,
+                                    information or transaction, etc. through the services offered by this Website;</li>
+                                <li>Your misunderstanding of the Services offered by this Website;</li>
+                                <li>Any other losses related to the services provided by this Website, which cannot be
+                                    attributed to us.</li>
+                            </ol>
+                            <p>We are not responsible for the failure of preservation, modification, deletion or storage
+                                of the information released by the user. Nor will our network be liable for the
+                                typographical errors, negligence, etc. not intentionally caused by our network. We have
+                                the right but no obligation to improve or correct any omission, error of any part of
+                                this site.</p>
+                            <p>We cannot guarantee that all the information, programs, texts, etc. contained in this
+                                Website are completely safe, free from the interference and destruction by any malicious
+                                programs such as viruses, trojans, etc., therefore, your log-into this Website or use of
+                                any services offered by this Website, download of any program, information and data from
+                                this Website and your use thereof are your personal decisions and therefore you shall
+                                bear the any and all risks and losses that may possibly arise.</p>
+                            <p>We do not make any warranties and commitments in connection with any of the information,
+                                products and business of any third party websites linked to this Website, as well as any
+                                other forms of content that do not belong to us; your use any of the services,
+                                information, and products provided by a third party website is your personal decision
+                                and therefore you shall assume any and all the responsibilities arising therefrom.</p>
+                            <p>We do not make any explicit or implicit warranties in connection with the market, value
+                                and price of cryptocurrency.</p>
+                            <p>We do not waive any of the rights not mentioned in this Agreement and to the maximum
+                                extent permitted by the applicable law, to limit, exempt or offset our liability for
+                                damages.</p>
+                            <p>Upon your registration of your account with this Website, it shall be deemed that you
+                                approve any and all operations performed by us in accordance with the rules set forth in
+                                this Agreement, and any and all risks arising from such operations shall be assumed by
+                                you.</p>
+                            <h2 class="my-4" id="intellectual-property">INTELLECTUAL PROPERTY</h2>
+                            <hr class="my-2">
+                            <p>All intellectual achievements included in this Website, including, but not limited to,
+                                website logos, databases, website design, text and graphics, software, photos, videos,
+                                music, sounds and any combinations of the aforementioned files, and the intellectual
+                                property rights of software compilation, associated source code and software (including
+                                small applications and scripts) shall be owned by this Website. You may not copy,
+                                modify, copy, transmit or use any of the foregoing materials or content for commercial
+                                purposes.</p>
+                            <p>All rights contained in the name of this Website (including but not limited to business
+                                goodwill and trademarks, logos) shall be owned by the Company.</p>
+                            <p>Upon accepting this Agreement, it shall be deemed that you, on the basis of your own free
+                                will, have transferred and assigned exclusively and free of charge to this Website all
+                                copyright of any form of information that you publish on this Website, including, but
+                                not limited to copyrights, distribution rights, lease rights, exhibition rights,
+                                performance rights, projection rights, broadcasting rights, information network
+                                dissemination rights, shooting rights, adaptation rights, translation rights,
+                                compilation rights and other transferable rights that copyright owners are entitled to,
+                                and this Website shall have the right to sue for any infringement on such copyright and
+                                obtain full compensation for such infringement. This Agreement shall apply to any
+                                content that is published by you on this Website and is protected by copyright law,
+                                regardless of whether the content is generated before or after the signing of this
+                                Agreement.</p>
+                            <p>You shall not illegally use or dispose of the intellectual property rights of this
+                                Website or any other person during your use of the services offered by this Website. For
+                                any information that you publish on this Website, you may not publish or authorize other
+                                websites (or media) to use such information in any manner whatsoever.</p>
+                            <p>Your log into this Website or use of any of the services offered by this Website shall
+                                not be seemed as our transfer of any intellectual property to you.</p>
+                            <h2 class="my-4" id="applicable-law-and-venue">APPLICABLE LAW AND VENUE</h2>
+                            <hr class="my-2">
+                            <p>These Terms and your use of the Services will be governed by and construed in accordance
+                                with the laws of the Website registration country. You agree that any action at law
+                                pursued by you and arising out of or relating to these Terms not subject to arbitration
+                                (as set forth below) will be filed only in the local court where HIEX LLC locates and
+                                you hereby irrevocably and unconditionally consent and submit to the exclusive
+                                jurisdiction of such court over any suit, action or proceeding arising out of these
+                                Terms.</p>
+                            <h3 id="arbitration">ARBITRATION</h3>
+                            <p>You and we agree to arbitrate any dispute arising from these Terms or relating to the
+                                Services, except that you and we are not required to arbitrate any dispute in which
+                                either party seeks other relief for the alleged unlawful use of copyrights, trademarks,
+                                trade names, logos, trade secrets or patents. ARBITRATION PREVENTS YOU FROM SUING IN
+                                COURT. You and we agree that you will notify each other of any dispute within thirty
+                                (30) days of when it arises, that you will attempt informal resolution prior to any
+                                demand for arbitration and that arbitration will be conducted confidentially by a single
+                                arbitrator. You and we also agree that the local court where HIEX LLC locates has
+                                exclusive jurisdiction over any appeals of an arbitration award and over any suit
+                                between the parties not subject to arbitration. You also agree not to participate in
+                                claims brought in by a private attorney general or representative capacity, or
+                                consolidated claims involving another person, if we are a party to the proceeding.</p>
+                            <h3 id="separability">SEPARABILITY</h3>
+                            <p>If any provision of this Agreement is deemed to be unlawful, invalid or unenforceable for
+                                any reason, such provision shall be deemed to be divisible and shall not affect the
+                                legal effect of any other provision.</p>
+                            <h3 id="indemnity">INDEMNITY</h3>
+                            <p>To the full extent permitted by applicable law, you hereby agree to indemnify HIEX LLC,
+                                and its partners against any action, liability, cost, claim, loss, damage, proceeding or
+                                expense suffered or incurred if direct or not directly arising from your use of Website,
+                                your use of the Service, or from your violation of these Terms of Use.</p>
+                            <h2 class="my-4" id="communication-with-us">Communication with Us</h2>
+                            <hr class="my-2">
+                            <p>If you have any requests and comments, you can send an email to support@abcex.io, which
+                                is the only valid and official email through which we communicate with you, so we will
+                                not bear any liability for your failure to using effective contact information, any act
+                                or omission.</p>
+                            <p>We only publish announcements and information on the basis of the valid and effective
+                                contact information on this Website or post announcements on this Website; therefore, we
+                                shall not be held liable for any loss arising from your trust in the information that
+                                has not been obtained through the above-mentioned means.</p>
+                            <p>If you have any questions regarding This Agreement, you are welcome to contact us at any
+                                time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script id="__NEXT_DATA__"
+        type="application/json">{"props":{"pageProps":{}},"page":"/agreements/terms-of-use","query":{},"buildId":"4olc8hC05XfpYtwj75_MN","assetPrefix":"/client","nextExport":true,"autoExport":true,"isFallback":false,"scriptLoader":[]}</script>
+    <script defer=""
+        src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+        data-cf-beacon="{&quot;rayId&quot;:&quot;8fe6d6de9b461860&quot;,&quot;serverTiming&quot;:{&quot;name&quot;:{&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfSpeedBrain&quot;:true,&quot;cfCacheStatus&quot;:true}},&quot;version&quot;:&quot;2024.10.5&quot;,&quot;token&quot;:&quot;5652d555b2cd42218b24bb9bdddf5daa&quot;}"
+        crossorigin="anonymous"></script>
+    <next-route-announcer>
+        <p aria-live="assertive" id="__next-route-announcer__" role="alert"
+            style="border: 0px; clip: rect(0px, 0px, 0px, 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; top: 0px; width: 1px; white-space: nowrap; overflow-wrap: normal;">
+        </p>
+    </next-route-announcer>
+    <script src="/client/_next/static/chunks/pages/index-8b1a229401e05615.js"></script>
+    <script src="/client/_next/static/chunks/pages/profile-878911f749f11736.js"></script>
+    <script src="/client/_next/static/chunks/pages/assets-54c386990bc07a57.js"></script>
+    <script src="/client/_next/static/chunks/496-0d4889eb49faaa1b.js"></script>
+    <script src="/client/_next/static/chunks/4038-af849dcd286473fc.js"></script>
+    <script src="/client/_next/static/chunks/pages/exchange-531dbb7902f17009.js"></script>
+    <script src="/client/_next/static/chunks/7262-7d587feff5a0d04e.js"></script>
+    <script src="/client/_next/static/chunks/pages/p2p-c4064ced65c252d4.js"></script><iframe id="intercom-frame"
+        style="position: absolute !important; opacity: 0 !important; width: 1px !important; height: 1px !important; top: 0 !important; left: 0 !important; border: none !important; display: block !important; z-index: -1 !important; pointer-events: none;"
+        aria-hidden="true" tabindex="-1" title="Intercom"></iframe>
+    <div class="intercom-lightweight-app">
+        <style id="intercom-lightweight-app-style" type="text/css">
+            @keyframes intercom-lightweight-app-launcher {
+                from {
+                    opacity: 0;
+                    transform: scale(0.5);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            @keyframes intercom-lightweight-app-gradient {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            @keyframes intercom-lightweight-app-messenger {
+                0% {
+                    opacity: 0;
+                    transform: scale(0);
+                }
+
+                40% {
+                    opacity: 1;
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            .intercom-lightweight-app {
+                position: fixed;
+                z-index: 2147483001;
+                width: 0;
+                height: 0;
+                font-family: intercom-font, "Helvetica Neue", "Apple Color Emoji", Helvetica, Arial, sans-serif;
+            }
+
+            .intercom-lightweight-app-gradient {
+                position: fixed;
+                z-index: 2147483002;
+                width: 500px;
+                height: 500px;
+                bottom: 0;
+                right: 0;
+                pointer-events: none;
+                background: radial-gradient(ellipse at bottom right,
+                        rgba(29, 39, 54, 0.16) 0%,
+                        rgba(29, 39, 54, 0) 72%);
+                animation: intercom-lightweight-app-gradient 200ms ease-out;
+            }
+
+            .intercom-lightweight-app-launcher {
+                position: fixed;
+                z-index: 2147483003;
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none;
+                bottom: 20px;
+                right: 20px;
+                max-width: 48px;
+                width: 48px;
+                max-height: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: #0166ff;
+                cursor: pointer;
+                box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.06), 0 2px 32px 0 rgba(0, 0, 0, 0.16);
+                transition: transform 167ms cubic-bezier(0.33, 0.00, 0.00, 1.00);
+                box-sizing: content-box;
+            }
+
+
+            .intercom-lightweight-app-launcher:hover {
+                transition: transform 250ms cubic-bezier(0.33, 0.00, 0.00, 1.00);
+                transform: scale(1.1)
+            }
+
+            .intercom-lightweight-app-launcher:active {
+                transform: scale(0.85);
+                transition: transform 134ms cubic-bezier(0.45, 0, 0.2, 1);
+            }
+
+
+            .intercom-lightweight-app-launcher:focus {
+                outline: none;
+
+
+            }
+
+            .intercom-lightweight-app-launcher-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 48px;
+                height: 48px;
+                transition: transform 100ms linear, opacity 80ms linear;
+            }
+
+            .intercom-lightweight-app-launcher-icon-open {
+
+                opacity: 1;
+                transform: rotate(0deg) scale(1);
+
+            }
+
+            .intercom-lightweight-app-launcher-icon-open svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .intercom-lightweight-app-launcher-icon-open svg path {
+                fill: rgb(255, 255, 255);
+            }
+
+            .intercom-lightweight-app-launcher-icon-self-serve {
+
+                opacity: 1;
+                transform: rotate(0deg) scale(1);
+
+            }
+
+            .intercom-lightweight-app-launcher-icon-self-serve svg {
+                height: 44px;
+            }
+
+            .intercom-lightweight-app-launcher-icon-self-serve svg path {
+                fill: rgb(255, 255, 255);
+            }
+
+            .intercom-lightweight-app-launcher-custom-icon-open {
+                max-height: 24px;
+                max-width: 24px;
+
+
+                opacity: 1;
+                transform: rotate(0deg) scale(1);
+
+            }
+
+            .intercom-lightweight-app-launcher-icon-minimize {
+
+                opacity: 0;
+                transform: rotate(-60deg) scale(0);
+
+            }
+
+            .intercom-lightweight-app-launcher-icon-minimize svg path {
+                fill: rgb(255, 255, 255);
+            }
+
+            .intercom-lightweight-app-messenger {
+                position: fixed;
+                z-index: 2147483003;
+                overflow: hidden;
+                background-color: white;
+                animation: intercom-lightweight-app-messenger 250ms cubic-bezier(0, 1, 1, 1);
+                transform-origin: bottom right;
+
+
+                width: 400px;
+                height: calc(100% - 104px);
+                max-height: 704px;
+                min-height: 250px;
+                right: 20px;
+                bottom: 84px;
+                box-shadow: 0 5px 40px rgba(0, 0, 0, 0.16);
+
+
+                border-radius: 16px;
+            }
+
+            .intercom-lightweight-app-messenger-header {
+                height: 64px;
+                border-bottom: none;
+                background: #a3d2f0
+            }
+
+            .intercom-lightweight-app-messenger-footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                height: 80px;
+                background: #fff;
+                font-size: 14px;
+                line-height: 21px;
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.05);
+
+            }
+
+            @media print {
+                .intercom-lightweight-app {
+                    display: none;
+                }
+            }
+        </style>
+    </div>
+</body>
+
+</html>

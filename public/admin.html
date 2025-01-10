@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: #f9f9f9;
+      margin: 5px 0;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    li span {
+      display: block;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Users List</h1>
+    <input type="text" id="search" placeholder="Search users by ID or referral">
+    <ul id="usersList"></ul>
+  </div>
+
+  <script>
+    // Fetch users from the API
+    async function fetchUsers() {
+      try {
+        const response = await fetch('/api/users');
+        const data = await response.json();
+        if (data.success) {
+          return data.users;
+        } else {
+          throw new Error('Failed to fetch users');
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        return {};
+      }
+    }
+
+    // Render users to the list
+    function renderUsers(users) {
+      const usersList = document.getElementById('usersList');
+      usersList.innerHTML = ''; // Clear the list
+
+      // Convert users object to array and sort by ID
+      const usersArray = Object.values(users).sort((a, b) => a.id - b.id);
+
+      usersArray.forEach(user => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <strong>ID:</strong> ${user.id} <span><strong>Referrals:</strong> ${user.referrals} | <strong>Bonus:</strong> ${user.bonus} | <strong>Referral:</strong> ${user.referral}</span>
+        `;
+        usersList.appendChild(li);
+      });
+    }
+
+    // Search users by query
+    function searchUsers(users, query) {
+      return Object.values(users).filter(user => 
+        String(user.id).includes(query) || 
+        String(user.referral).includes(query)
+      );
+    }
+
+    // Main function
+    async function main() {
+      const users = await fetchUsers();
+
+      // Render all users initially
+      renderUsers(users);
+
+      // Add search functionality
+      const searchInput = document.getElementById('search');
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        const filteredUsers = searchUsers(users, query);
+        renderUsers(filteredUsers);
+      });
+    }
+
+    // Run the main function
+    main();
+  </script>
+</body>
+</html>

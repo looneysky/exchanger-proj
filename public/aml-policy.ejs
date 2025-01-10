@@ -1,0 +1,3201 @@
+<html>
+
+<head>
+    <style type="text/css">
+        .rdp {
+            padding-bottom: .75rem;
+            width: -moz-fit-content;
+            width: fit-content
+        }
+
+        .rdp-month {
+            display: grid;
+            gap: .25rem;
+            justify-content: flex-start
+        }
+
+        .rdp-cell {
+            padding: 0;
+            text-align: center
+        }
+
+        .rdp-cell,
+        .rdp-day,
+        .rdp-weeknumber {
+            height: 2.5rem;
+            width: 2.5rem
+        }
+
+        .rdp-day,
+        .rdp-weeknumber {
+            border-radius: 9999px;
+            overflow: hidden
+        }
+
+        .rdp-day_selected {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-2)/var(--twc-graphic-second-2-opacity, var(--tw-bg-opacity)));
+            opacity: 1
+        }
+
+        .rdp-day_content {
+            --tw-text-opacity: 1;
+            align-items: center;
+            border-radius: 9999px;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)));
+            display: flex;
+            font-size: .875rem;
+            font-weight: 500;
+            height: 100%;
+            justify-content: center;
+            line-height: 1.25rem;
+            width: 100%
+        }
+
+        .rdp-day_selected .rdp-day_content {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-1)/var(--twc-base-1-opacity, var(--tw-text-opacity)));
+            font-weight: 600
+        }
+
+        .rdp-range .rdp-day_range_end .rdp-day_content,
+        .rdp-range .rdp-day_range_start .rdp-day_content,
+        .rdp-single .rdp-day_selected .rdp-day_content {
+            --tw-bg-opacity: 1;
+            --tw-text-opacity: 1;
+            background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)));
+            color: rgb(255 255 255/var(--tw-text-opacity));
+            font-weight: 500
+        }
+
+        .rdp-row .rdp-cell {
+            padding-top: .375rem
+        }
+
+        .rdp:not([dir=rtl]) .rdp-day_range_start:not(.rdp-day_range_end) {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0
+        }
+
+        .rdp:not([dir=rtl]) .rdp-day_range_end:not(.rdp-day_range_start),
+        .rdp[dir=rtl] .rdp-day_range_start:not(.rdp-day_range_end) {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0
+        }
+
+        .rdp[dir=rtl] .rdp-day_range_end:not(.rdp-day_range_start) {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0
+        }
+
+        .rdp-day_range_end.rdp-day_range_start {
+            border-radius: 9999px
+        }
+
+        .rdp-day_range_middle {
+            border-radius: 0
+        }
+
+        .rdp-head_cell {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)));
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+            padding: .5rem 0;
+            text-align: center;
+            text-transform: uppercase
+        }
+    </style>
+    <style type="text/css">
+        .radio-circle:checked+div {
+            --tw-bg-opacity: 1;
+            --tw-border-opacity: 1;
+            background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)));
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .radio-circle:checked+div>svg {
+            visibility: visible
+        }
+    </style>
+    <style type="text/css">
+        .TooltipContent {
+            animation-duration: .4s;
+            animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 10px 38px -10px rgba(14, 18, 22, .35), 0 10px 20px -15px rgba(14, 18, 22, .2);
+            color: var(--violet-11);
+            font-size: 15px;
+            line-height: 1;
+            padding: 10px 15px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            will-change: transform, opacity
+        }
+
+        .TooltipContent[data-state=delayed-open][data-side=top] {
+            animation-name: slideDownAndFade
+        }
+
+        .TooltipContent[data-state=delayed-open][data-side=right] {
+            animation-name: slideLeftAndFade
+        }
+
+        .TooltipContent[data-state=delayed-open][data-side=bottom] {
+            animation-name: slideUpAndFade
+        }
+
+        .TooltipContent[data-state=delayed-open][data-side=left] {
+            animation-name: slideRightAndFade
+        }
+
+        @keyframes slideUpAndFade {
+            0% {
+                opacity: 0;
+                transform: translateY(2px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @keyframes slideRightAndFade {
+            0% {
+                opacity: 0;
+                transform: translateX(-2px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+
+        @keyframes slideDownAndFade {
+            0% {
+                opacity: 0;
+                transform: translateY(-2px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @keyframes slideLeftAndFade {
+            0% {
+                opacity: 0;
+                transform: translateX(2px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+    </style>
+    <style type="text/css">
+        .styles-module_modalScrollableContent__H4wkQ::-webkit-scrollbar-thumb {
+            background: hsl(var(--twc-graphic-second-1)/var(--twc-graphic-second-1-opacity, 1))
+        }
+
+        .styles-module_modalScrollableContent__H4wkQ::-webkit-scrollbar-track {
+            background: transparent
+        }
+    </style>
+    <style type="text/css">
+        .rt-TableRootTable {
+            width: 100%
+        }
+
+        .rt-r-ta-left {
+            text-align: left
+        }
+
+        .rt-r-ta-right {
+            text-align: right
+        }
+
+        .rt-r-ta-center {
+            text-align: center
+        }
+    </style>
+    <style type="text/css">
+        .ui-pointer-events-none {
+            pointer-events: none
+        }
+
+        .ui-pointer-events-auto {
+            pointer-events: auto
+        }
+
+        .ui-invisible {
+            visibility: hidden
+        }
+
+        .ui-fixed {
+            position: fixed
+        }
+
+        .ui-absolute {
+            position: absolute
+        }
+
+        .ui-relative {
+            position: relative
+        }
+
+        .ui-sticky {
+            position: sticky
+        }
+
+        .ui-inset-0 {
+            inset: 0
+        }
+
+        .ui-bottom-\[-28px\] {
+            bottom: -28px
+        }
+
+        .ui-bottom-\[-34px\] {
+            bottom: -34px
+        }
+
+        .ui-left-0 {
+            left: 0
+        }
+
+        .ui-left-\[3px\] {
+            left: 3px
+        }
+
+        .ui-right-0 {
+            right: 0
+        }
+
+        .ui-right-\[3px\] {
+            right: 3px
+        }
+
+        .ui-top-0 {
+            top: 0
+        }
+
+        .ui-top-1 {
+            top: .25rem
+        }
+
+        .ui-z-50 {
+            z-index: 50
+        }
+
+        .ui-z-\[100\] {
+            z-index: 100
+        }
+
+        .ui-z-\[60\] {
+            z-index: 60
+        }
+
+        .ui-z-\[999999999999\] {
+            z-index: 999999999999
+        }
+
+        .ui-m-0\.5 {
+            margin: .125rem
+        }
+
+        .ui-m-auto {
+            margin: auto
+        }
+
+        .ui-mx-auto {
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .ui-my-1\.5 {
+            margin-bottom: .375rem;
+            margin-top: .375rem
+        }
+
+        .ui-my-\[5px\] {
+            margin-bottom: 5px;
+            margin-top: 5px
+        }
+
+        .ui-mb-2 {
+            margin-bottom: .5rem
+        }
+
+        .ui-ml-auto {
+            margin-left: auto
+        }
+
+        .ui-mt-0\.5 {
+            margin-top: .125rem
+        }
+
+        .ui-mt-\[400px\] {
+            margin-top: 400px
+        }
+
+        .ui-box-border {
+            box-sizing: border-box
+        }
+
+        .ui-block {
+            display: block
+        }
+
+        .ui-inline {
+            display: inline
+        }
+
+        .ui-flex {
+            display: flex
+        }
+
+        .ui-inline-flex {
+            display: inline-flex
+        }
+
+        .ui-grid {
+            display: grid
+        }
+
+        .ui-contents {
+            display: contents
+        }
+
+        .ui-hidden {
+            display: none
+        }
+
+        .ui-size-3 {
+            height: .75rem;
+            width: .75rem
+        }
+
+        .ui-size-3\.5 {
+            height: .875rem;
+            width: .875rem
+        }
+
+        .ui-size-4 {
+            height: 1rem;
+            width: 1rem
+        }
+
+        .ui-size-5 {
+            height: 1.25rem;
+            width: 1.25rem
+        }
+
+        .\!ui-h-\[58px\] {
+            height: 58px !important
+        }
+
+        .\!ui-h-fit {
+            height: -moz-fit-content !important;
+            height: fit-content !important
+        }
+
+        .ui-h-0\.5 {
+            height: .125rem
+        }
+
+        .ui-h-1 {
+            height: .25rem
+        }
+
+        .ui-h-10 {
+            height: 2.5rem
+        }
+
+        .ui-h-4 {
+            height: 1rem
+        }
+
+        .ui-h-5 {
+            height: 1.25rem
+        }
+
+        .ui-h-6 {
+            height: 1.5rem
+        }
+
+        .ui-h-7 {
+            height: 1.75rem
+        }
+
+        .ui-h-8 {
+            height: 2rem
+        }
+
+        .ui-h-9 {
+            height: 2.25rem
+        }
+
+        .ui-h-\[1000px\] {
+            height: 1000px
+        }
+
+        .ui-h-\[12px\] {
+            height: 12px
+        }
+
+        .ui-h-\[21px\] {
+            height: 21px
+        }
+
+        .ui-h-\[24px\] {
+            height: 24px
+        }
+
+        .ui-h-\[25px\] {
+            height: 25px
+        }
+
+        .ui-h-\[34px\] {
+            height: 34px
+        }
+
+        .ui-h-\[35px\] {
+            height: 35px
+        }
+
+        .ui-h-\[36px\] {
+            height: 36px
+        }
+
+        .ui-h-\[38px\] {
+            height: 38px
+        }
+
+        .ui-h-\[42px\] {
+            height: 42px
+        }
+
+        .ui-h-\[46px\] {
+            height: 46px
+        }
+
+        .ui-h-\[50px\] {
+            height: 50px
+        }
+
+        .ui-h-\[54px\] {
+            height: 54px
+        }
+
+        .ui-h-\[58px\] {
+            height: 58px
+        }
+
+        .ui-h-\[9px\] {
+            height: 9px
+        }
+
+        .ui-h-fit {
+            height: -moz-fit-content;
+            height: fit-content
+        }
+
+        .ui-h-full {
+            height: 100%
+        }
+
+        .ui-h-px {
+            height: 1px
+        }
+
+        .ui-min-h-10 {
+            min-height: 2.5rem
+        }
+
+        .ui-min-h-7 {
+            min-height: 1.75rem
+        }
+
+        .ui-min-h-\[20px\] {
+            min-height: 20px
+        }
+
+        .ui-min-h-\[24px\] {
+            min-height: 24px
+        }
+
+        .ui-min-h-\[36px\] {
+            min-height: 36px
+        }
+
+        .ui-min-h-\[42px\] {
+            min-height: 42px
+        }
+
+        .ui-min-h-\[48px\] {
+            min-height: 48px
+        }
+
+        .ui-min-h-\[50px\] {
+            min-height: 50px
+        }
+
+        .ui-min-h-\[56px\] {
+            min-height: 56px
+        }
+
+        .ui-min-h-\[58px\] {
+            min-height: 58px
+        }
+
+        .ui-min-h-\[62px\] {
+            min-height: 62px
+        }
+
+        .\!ui-w-full {
+            width: 100% !important
+        }
+
+        .\!ui-w-screen {
+            width: 100vw !important
+        }
+
+        .ui-w-16 {
+            width: 4rem
+        }
+
+        .ui-w-3 {
+            width: .75rem
+        }
+
+        .ui-w-4 {
+            width: 1rem
+        }
+
+        .ui-w-5 {
+            width: 1.25rem
+        }
+
+        .ui-w-6 {
+            width: 1.5rem
+        }
+
+        .ui-w-7 {
+            width: 1.75rem
+        }
+
+        .ui-w-8 {
+            width: 2rem
+        }
+
+        .ui-w-\[11px\] {
+            width: 11px
+        }
+
+        .ui-w-\[12px\] {
+            width: 12px
+        }
+
+        .ui-w-\[200px\] {
+            width: 200px
+        }
+
+        .ui-w-\[21px\] {
+            width: 21px
+        }
+
+        .ui-w-\[34px\] {
+            width: 34px
+        }
+
+        .ui-w-\[36px\] {
+            width: 36px
+        }
+
+        .ui-w-\[38px\] {
+            width: 38px
+        }
+
+        .ui-w-\[400px\] {
+            width: 400px
+        }
+
+        .ui-w-\[42px\] {
+            width: 42px
+        }
+
+        .ui-w-\[46px\] {
+            width: 46px
+        }
+
+        .ui-w-\[54px\] {
+            width: 54px
+        }
+
+        .ui-w-fit {
+            width: -moz-fit-content;
+            width: fit-content
+        }
+
+        .ui-w-full {
+            width: 100%
+        }
+
+        .ui-min-w-0 {
+            min-width: 0
+        }
+
+        .ui-min-w-10 {
+            min-width: 2.5rem
+        }
+
+        .ui-min-w-4 {
+            min-width: 1rem
+        }
+
+        .ui-min-w-7 {
+            min-width: 1.75rem
+        }
+
+        .ui-min-w-\[125px\] {
+            min-width: 125px
+        }
+
+        .ui-min-w-\[166px\] {
+            min-width: 166px
+        }
+
+        .ui-min-w-\[24px\] {
+            min-width: 24px
+        }
+
+        .ui-min-w-\[281px\] {
+            min-width: 281px
+        }
+
+        .ui-min-w-\[38px\] {
+            min-width: 38px
+        }
+
+        .ui-min-w-\[40px\] {
+            min-width: 40px
+        }
+
+        .ui-min-w-\[50px\] {
+            min-width: 50px
+        }
+
+        .ui-min-w-\[var\(--radix-popper-anchor-width\)\] {
+            min-width: var(--radix-popper-anchor-width)
+        }
+
+        .ui-min-w-fit {
+            min-width: -moz-fit-content;
+            min-width: fit-content
+        }
+
+        .ui-min-w-full {
+            min-width: 100%
+        }
+
+        .ui-max-w-\[48px\] {
+            max-width: 48px
+        }
+
+        .ui-max-w-\[96px\] {
+            max-width: 96px
+        }
+
+        .ui-max-w-full {
+            max-width: 100%
+        }
+
+        .ui-flex-1 {
+            flex: 1 1 0%
+        }
+
+        .ui-flex-shrink-0 {
+            flex-shrink: 0
+        }
+
+        .ui-translate-x-\[2px\] {
+            --tw-translate-x: 2px
+        }
+
+        .ui-translate-x-\[2px\],
+        .ui-translate-x-\[3px\] {
+            transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+        }
+
+        .ui-translate-x-\[3px\] {
+            --tw-translate-x: 3px
+        }
+
+        .ui-rotate-180 {
+            --tw-rotate: 180deg
+        }
+
+        .ui-rotate-180,
+        .ui-scale-50 {
+            transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+        }
+
+        .ui-scale-50 {
+            --tw-scale-x: .5;
+            --tw-scale-y: .5
+        }
+
+        .ui-transform {
+            transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+        }
+
+        @keyframes ui-spin {
+            to {
+                transform: rotate(1turn)
+            }
+        }
+
+        .ui-animate-spin {
+            animation: ui-spin var(--tw-animate-duration, 1s) var(--tw-animate-easing, linear) var(--tw-animate-delay, 0s) var(--tw-animate-iteration, infinite) var(--tw-animate-fill, none)
+        }
+
+        .ui-cursor-default {
+            cursor: default
+        }
+
+        .ui-cursor-pointer {
+            cursor: pointer
+        }
+
+        .ui-cursor-text {
+            cursor: text
+        }
+
+        .ui-select-none {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none
+        }
+
+        .ui-resize-none {
+            resize: none
+        }
+
+        .ui-grid-cols-\[1fr_auto_1fr\] {
+            grid-template-columns: 1fr auto 1fr
+        }
+
+        .ui-flex-row {
+            flex-direction: row
+        }
+
+        .ui-flex-col {
+            flex-direction: column
+        }
+
+        .ui-items-start {
+            align-items: flex-start
+        }
+
+        .ui-items-end {
+            align-items: flex-end
+        }
+
+        .ui-items-center {
+            align-items: center
+        }
+
+        .ui-justify-start {
+            justify-content: flex-start
+        }
+
+        .ui-justify-end {
+            justify-content: flex-end
+        }
+
+        .ui-justify-center {
+            justify-content: center
+        }
+
+        .ui-justify-between {
+            justify-content: space-between
+        }
+
+        .ui-gap-0\.5 {
+            gap: .125rem
+        }
+
+        .ui-gap-1 {
+            gap: .25rem
+        }
+
+        .ui-gap-1\.5 {
+            gap: .375rem
+        }
+
+        .ui-gap-2 {
+            gap: .5rem
+        }
+
+        .ui-gap-3 {
+            gap: .75rem
+        }
+
+        .ui-gap-4 {
+            gap: 1rem
+        }
+
+        .ui-gap-\[16px\] {
+            gap: 16px
+        }
+
+        .ui-gap-\[6px\] {
+            gap: 6px
+        }
+
+        .ui-gap-\[8px\] {
+            gap: 8px
+        }
+
+        .ui-overflow-auto {
+            overflow: auto
+        }
+
+        .ui-overflow-hidden {
+            overflow: hidden
+        }
+
+        .ui-overflow-visible {
+            overflow: visible
+        }
+
+        .ui-overflow-x-auto {
+            overflow-x: auto
+        }
+
+        .ui-overflow-y-auto {
+            overflow-y: auto
+        }
+
+        .ui-truncate {
+            overflow: hidden;
+            white-space: nowrap
+        }
+
+        .ui-overflow-ellipsis,
+        .ui-truncate {
+            text-overflow: ellipsis
+        }
+
+        .ui-whitespace-nowrap {
+            white-space: nowrap
+        }
+
+        .ui-rounded-\[10px\] {
+            border-radius: 10px
+        }
+
+        .ui-rounded-\[12px\] {
+            border-radius: 12px
+        }
+
+        .ui-rounded-\[14px\] {
+            border-radius: 14px
+        }
+
+        .ui-rounded-\[28px\] {
+            border-radius: 28px
+        }
+
+        .ui-rounded-\[6px\] {
+            border-radius: 6px
+        }
+
+        .ui-rounded-\[8px\] {
+            border-radius: 8px
+        }
+
+        .ui-rounded-\[9px\] {
+            border-radius: 9px
+        }
+
+        .ui-rounded-full {
+            border-radius: 9999px
+        }
+
+        .ui-rounded-lg {
+            border-radius: .5rem
+        }
+
+        .ui-rounded-md {
+            border-radius: .375rem
+        }
+
+        .ui-rounded-xl {
+            border-radius: .75rem
+        }
+
+        .\!ui-rounded-t-\[28px\] {
+            border-top-left-radius: 28px !important;
+            border-top-right-radius: 28px !important
+        }
+
+        .ui-border,
+        .ui-border-\[1px\] {
+            border-width: 1px
+        }
+
+        .ui-border-b-\[1px\] {
+            border-bottom-width: 1px
+        }
+
+        .ui-border-solid {
+            border-style: solid
+        }
+
+        .ui-border-base-3 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-blue-1 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-graphic-base-3 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-graphic-base-3)/var(--twc-graphic-base-3-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-red-1 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-second-1 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-1)/var(--twc-second-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-second-3 {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-3)/var(--twc-second-3-opacity, var(--tw-border-opacity)))
+        }
+
+        .ui-border-transparent {
+            border-color: transparent
+        }
+
+        .\!ui-bg-background-1 {
+            --tw-bg-opacity: 1 !important;
+            background-color: hsl(var(--twc-background-1)/var(--twc-background-1-opacity, var(--tw-bg-opacity))) !important
+        }
+
+        .\!ui-bg-black\/50 {
+            background-color: rgba(0, 0, 0, .5) !important
+        }
+
+        .\!ui-bg-orange-1\/10 {
+            background-color: hsl(var(--twc-orange-1)/.1) !important
+        }
+
+        .\!ui-bg-red-1\/10 {
+            background-color: hsl(var(--twc-red-1)/.1) !important
+        }
+
+        .ui-bg-base-2 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-black {
+            --tw-bg-opacity: 1;
+            background-color: rgb(0 0 0/var(--tw-bg-opacity))
+        }
+
+        .ui-bg-black\/50 {
+            background-color: rgba(0, 0, 0, .5)
+        }
+
+        .ui-bg-blue-1 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-blue-1\/10 {
+            background-color: hsl(var(--twc-blue-1)/.1)
+        }
+
+        .ui-bg-graphic-base-3 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-base-3)/var(--twc-graphic-base-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-graphic-red-1 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-red-1)/var(--twc-graphic-red-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-graphic-second-2 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-2)/var(--twc-graphic-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-graphic-second-4 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-4)/var(--twc-graphic-second-4-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-graphic-second-7 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-7)/var(--twc-graphic-second-7-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-graphic-second-8 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-8)/var(--twc-graphic-second-8-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-green-1 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-green-1)/var(--twc-green-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-red-1 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-red-1\/10 {
+            background-color: hsl(var(--twc-red-1)/.1)
+        }
+
+        .ui-bg-second-1 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-1)/var(--twc-second-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-second-2 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-second-3 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-3)/var(--twc-second-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-second-4 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-4)/var(--twc-second-4-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-second-5 {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-5)/var(--twc-second-5-opacity, var(--tw-bg-opacity)))
+        }
+
+        .ui-bg-transparent {
+            background-color: transparent
+        }
+
+        .ui-bg-white {
+            --tw-bg-opacity: 1;
+            background-color: rgb(255 255 255/var(--tw-bg-opacity))
+        }
+
+        .ui-bg-opacity-0 {
+            --tw-bg-opacity: 0
+        }
+
+        .ui-bg-opacity-10 {
+            --tw-bg-opacity: 0.1
+        }
+
+        .ui-p-0 {
+            padding: 0
+        }
+
+        .ui-p-0\.5 {
+            padding: .125rem
+        }
+
+        .ui-p-1\.5 {
+            padding: .375rem
+        }
+
+        .ui-p-2 {
+            padding: .5rem
+        }
+
+        .ui-p-2\.5 {
+            padding: .625rem
+        }
+
+        .ui-p-4 {
+            padding: 1rem
+        }
+
+        .ui-p-\[2px\] {
+            padding: 2px
+        }
+
+        .ui-p-\[6px\] {
+            padding: 6px
+        }
+
+        .\!ui-px-0 {
+            padding-left: 0 !important;
+            padding-right: 0 !important
+        }
+
+        .ui-px-1 {
+            padding-left: .25rem;
+            padding-right: .25rem
+        }
+
+        .ui-px-2 {
+            padding-left: .5rem;
+            padding-right: .5rem
+        }
+
+        .ui-px-2\.5 {
+            padding-left: .625rem;
+            padding-right: .625rem
+        }
+
+        .ui-px-3 {
+            padding-left: .75rem;
+            padding-right: .75rem
+        }
+
+        .ui-px-4 {
+            padding-left: 1rem;
+            padding-right: 1rem
+        }
+
+        .ui-px-5 {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem
+        }
+
+        .ui-px-\[3px\] {
+            padding-left: 3px;
+            padding-right: 3px
+        }
+
+        .ui-px-\[8px\] {
+            padding-left: 8px;
+            padding-right: 8px
+        }
+
+        .ui-py-0\.5 {
+            padding-bottom: .125rem;
+            padding-top: .125rem
+        }
+
+        .ui-py-1 {
+            padding-bottom: .25rem;
+            padding-top: .25rem
+        }
+
+        .ui-py-1\.5 {
+            padding-bottom: .375rem;
+            padding-top: .375rem
+        }
+
+        .ui-py-2 {
+            padding-bottom: .5rem;
+            padding-top: .5rem
+        }
+
+        .ui-py-3 {
+            padding-bottom: .75rem;
+            padding-top: .75rem
+        }
+
+        .ui-py-3\.5 {
+            padding-bottom: .875rem;
+            padding-top: .875rem
+        }
+
+        .ui-py-4 {
+            padding-bottom: 1rem;
+            padding-top: 1rem
+        }
+
+        .ui-py-\[18px\] {
+            padding-bottom: 18px;
+            padding-top: 18px
+        }
+
+        .ui-py-\[2px\] {
+            padding-bottom: 2px;
+            padding-top: 2px
+        }
+
+        .ui-py-\[7px\] {
+            padding-bottom: 7px;
+            padding-top: 7px
+        }
+
+        .ui-pb-1 {
+            padding-bottom: .25rem
+        }
+
+        .ui-pb-1\.5 {
+            padding-bottom: .375rem
+        }
+
+        .ui-pb-5 {
+            padding-bottom: 1.25rem
+        }
+
+        .ui-pl-2 {
+            padding-left: .5rem
+        }
+
+        .ui-pt-1 {
+            padding-top: .25rem
+        }
+
+        .ui-pt-2 {
+            padding-top: .5rem
+        }
+
+        .ui-pt-2\.5 {
+            padding-top: .625rem
+        }
+
+        .ui-text-left {
+            text-align: left
+        }
+
+        .ui-text-center {
+            text-align: center
+        }
+
+        .ui-text-\[11px\] {
+            font-size: 11px
+        }
+
+        .ui-text-\[12px\] {
+            font-size: 12px
+        }
+
+        .ui-text-\[13px\] {
+            font-size: 13px
+        }
+
+        .ui-text-\[14px\] {
+            font-size: 14px
+        }
+
+        .ui-text-\[16px\] {
+            font-size: 16px
+        }
+
+        .ui-text-\[32px\] {
+            font-size: 32px
+        }
+
+        .ui-text-\[52px\] {
+            font-size: 52px
+        }
+
+        .ui-text-base {
+            font-size: 1rem;
+            line-height: 1.5rem
+        }
+
+        .ui-text-lg {
+            font-size: 1.125rem;
+            line-height: 1.75rem
+        }
+
+        .ui-text-sm {
+            font-size: .875rem;
+            line-height: 1.25rem
+        }
+
+        .ui-text-xl {
+            font-size: 1.25rem;
+            line-height: 1.75rem
+        }
+
+        .ui-text-xs {
+            font-size: .75rem;
+            line-height: 1rem
+        }
+
+        .ui-font-bold {
+            font-weight: 700
+        }
+
+        .ui-font-medium {
+            font-weight: 500
+        }
+
+        .ui-font-semibold {
+            font-weight: 600
+        }
+
+        .ui-capitalize {
+            text-transform: capitalize
+        }
+
+        .ui-leading-4 {
+            line-height: 1rem
+        }
+
+        .ui-leading-5 {
+            line-height: 1.25rem
+        }
+
+        .ui-leading-\[15px\] {
+            line-height: 15px
+        }
+
+        .ui-leading-\[16px\] {
+            line-height: 16px
+        }
+
+        .ui-leading-\[18px\] {
+            line-height: 18px
+        }
+
+        .ui-leading-\[20px\] {
+            line-height: 20px
+        }
+
+        .ui-leading-\[22px\] {
+            line-height: 22px
+        }
+
+        .ui-leading-\[48px\] {
+            line-height: 48px
+        }
+
+        .ui-leading-none {
+            line-height: 1
+        }
+
+        .\!ui-text-base-1 {
+            --tw-text-opacity: 1 !important;
+            color: hsl(var(--twc-base-1)/var(--twc-base-1-opacity, var(--tw-text-opacity))) !important
+        }
+
+        .ui-text-background-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-background-1)/var(--twc-background-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-base-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-1)/var(--twc-base-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-base-2 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-base-3 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-base-4 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-4)/var(--twc-base-4-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-black-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-black-1)/var(--twc-black-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-black-2 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-black-2)/var(--twc-black-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-blue-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-graphic-base-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-graphic-base-1)/var(--twc-graphic-base-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-green-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-green-1)/var(--twc-green-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-orange-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-orange-1)/var(--twc-orange-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-red-1 {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-text-rose-600 {
+            --tw-text-opacity: 1;
+            color: rgb(225 29 72/var(--tw-text-opacity))
+        }
+
+        .ui-text-white {
+            --tw-text-opacity: 1;
+            color: rgb(255 255 255/var(--tw-text-opacity))
+        }
+
+        .ui-no-underline {
+            text-decoration-line: none
+        }
+
+        .\!ui-shadow-none {
+            --tw-shadow: 0 0 #0000 !important;
+            --tw-shadow-colored: 0 0 #0000 !important;
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important
+        }
+
+        .ui-shadow-\[0_12px_60px_rgba\(31\,_31\,_36\,_0\.25\)\] {
+            --tw-shadow: 0 12px 60px rgba(31, 31, 36, .25);
+            --tw-shadow-colored: 0 12px 60px var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+        }
+
+        .ui-shadow-\[0_4px_10px_rgba\(25\,_26\,_28\,_0\.12\)\] {
+            --tw-shadow: 0 4px 10px rgba(25, 26, 28, .12);
+            --tw-shadow-colored: 0 4px 10px var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+        }
+
+        .ui-shadow-\[0_6px_16px_0_rgba\(0\,0\,0\,0\.2\)\] {
+            --tw-shadow: 0 6px 16px 0 rgba(0, 0, 0, .2);
+            --tw-shadow-colored: 0 6px 16px 0 var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+        }
+
+        .ui-outline-none {
+            outline: 2px solid transparent;
+            outline-offset: 2px
+        }
+
+        .ui-outline {
+            outline-style: solid
+        }
+
+        .ui-outline-0 {
+            outline-width: 0
+        }
+
+        .ui-outline-2 {
+            outline-width: 2px
+        }
+
+        .ui-outline-base-3 {
+            outline-color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, 1))
+        }
+
+        .ui-transition {
+            transition-duration: .15s;
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ui-transition-\[max-height\] {
+            transition-duration: .15s;
+            transition-property: max-height;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ui-transition-all {
+            transition-duration: .15s;
+            transition-property: all;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ui-transition-transform {
+            transition-duration: .15s;
+            transition-property: transform;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ui-duration-300 {
+            transition-duration: .3s
+        }
+
+        .ui-duration-\[100ms\] {
+            transition-duration: .1s
+        }
+
+        .ui-duration-\[220ms\] {
+            transition-duration: .22s
+        }
+
+        .ui-ease-in-out {
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ui-will-change-\[transform\,opacity\] {
+            will-change: transform, opacity
+        }
+
+        .ui-will-change-transform {
+            will-change: transform
+        }
+
+        .ui-theme-light,
+        [data-theme=light] {
+            --twc-background-1: 0 0% 100%;
+            --twc-background-2: 240 7.7% 97.5%;
+            --twc-black-1: 0 0% 0%;
+            --twc-black-2: 240 7.5% 13.1%;
+            --twc-base-1: 240 7.5% 13.1%;
+            --twc-base-2: 0 0% 52.2%;
+            --twc-base-3: 0 0% 64.3%;
+            --twc-base-4: 0 0% 100%;
+            --twc-second-1: 0 0% 91%;
+            --twc-second-2: 0 0% 94.1%;
+            --twc-second-3: 0 0% 98%;
+            --twc-second-4: 0 0% 100%;
+            --twc-second-5: 0 0% 0%;
+            --twc-green-1: 143.8 70.9% 40.4%;
+            --twc-green-2: 143.8 63.5% 45.1%;
+            --twc-green-3: 143.8 70.9% 40.4%;
+            --twc-green-3-opacity: 0.60;
+            --twc-red-1: 343.1 81.2% 48%;
+            --twc-red-2: 343.1 82.6% 52.7%;
+            --twc-blue-1: 216 100% 50%;
+            --twc-blue-2: 216.20000000000005 100% 55.1%;
+            --twc-blue-3: 216 100% 50%;
+            --twc-orange-1: 28.600000000000023 100% 45.3%;
+            --twc-orange-2: 28.600000000000023 90.6% 50%;
+            --twc-orange-3: 28.69999999999999 81.5% 48.8%;
+            --twc-graphic-base-1: 0 0% 26.7%;
+            --twc-graphic-base-2: 0 0% 50.6%;
+            --twc-graphic-base-3: 0 0% 64.3%;
+            --twc-graphic-base-4: 0 0% 100%;
+            --twc-graphic-second-1: 0 0% 92.5%;
+            --twc-graphic-second-2: 0 0% 94.1%;
+            --twc-graphic-second-3: 0 0% 98%;
+            --twc-graphic-second-4: 0 0% 100%;
+            --twc-graphic-second-5: 0 0% 0%;
+            --twc-graphic-second-6: 0 0% 100%;
+            --twc-graphic-second-7: 0 0% 98%;
+            --twc-graphic-second-8: 0 0% 94.1%;
+            --twc-graphic-green-1: 143.8 70.9% 40.4%;
+            --twc-graphic-green-2: 143.8 63.5% 45.1%;
+            --twc-graphic-red-1: 343.1 81.2% 48%;
+            --twc-graphic-red-2: 343.1 82.6% 52.7%;
+            --twc-graphic-blue-1: 216 100% 50%;
+            --twc-graphic-blue-2: 216.20000000000005 100% 55.1%;
+            --twc-graphic-orange-1: 28.600000000000023 100% 45.3%;
+            --twc-graphic-orange-2: 28.600000000000023 90.6% 50%
+        }
+
+        .ui-theme-dark,
+        [data-theme=dark] {
+            --twc-background-1: 0 0% 8.6%;
+            --twc-background-2: 0 0% 11%;
+            --twc-black-1: 0 0% 100%;
+            --twc-black-2: 240 7.5% 13.1%;
+            --twc-base-1: 0 0% 98.4%;
+            --twc-base-2: 0 0% 72.9%;
+            --twc-base-3: 0 0% 32.5%;
+            --twc-base-4: 0 0% 100%;
+            --twc-second-1: 0 0% 18.8%;
+            --twc-second-2: 0 0% 14.5%;
+            --twc-second-3: 0 0% 11%;
+            --twc-second-4: 0 0% 9.4%;
+            --twc-second-5: 0 0% 100%;
+            --twc-green-1: 144.3 52.8% 44.9%;
+            --twc-green-2: 144.3 48.6% 48.8%;
+            --twc-green-3: 143.8 70.9% 40.4%;
+            --twc-green-3-opacity: 0.60;
+            --twc-red-1: 344.4 90.4% 59%;
+            --twc-red-2: 344.4 100% 60.8%;
+            --twc-blue-1: 216 100% 50%;
+            --twc-blue-2: 216.20000000000005 100% 55.1%;
+            --twc-blue-3: 216 100% 50%;
+            --twc-orange-1: 28.600000000000023 92.2% 54.9%;
+            --twc-orange-2: 28.69999999999999 100% 58.6%;
+            --twc-orange-3: 28.600000000000023 92.2% 54.9%;
+            --twc-graphic-base-1: 0 0% 98.4%;
+            --twc-graphic-base-2: 0 0% 72.9%;
+            --twc-graphic-base-3: 0 0% 32.5%;
+            --twc-graphic-base-4: 0 0% 100%;
+            --twc-graphic-second-1: 0 0% 18.8%;
+            --twc-graphic-second-2: 0 0% 14.5%;
+            --twc-graphic-second-3: 0 0% 11%;
+            --twc-graphic-second-4: 0 0% 9.4%;
+            --twc-graphic-second-5: 0 0% 100%;
+            --twc-graphic-second-6: 0 0% 14.5%;
+            --twc-graphic-second-7: 0 0% 18.8%;
+            --twc-graphic-second-8: 0 0% 13.7%;
+            --twc-graphic-green-1: 144.3 52.8% 44.9%;
+            --twc-graphic-green-2: 144.3 48.6% 48.8%;
+            --twc-graphic-red-1: 344.4 90.4% 59%;
+            --twc-graphic-red-2: 344.4 100% 60.8%;
+            --twc-graphic-blue-1: 216 100% 50%;
+            --twc-graphic-blue-2: 216.20000000000005 100% 55.1%;
+            --twc-graphic-orange-1: 28.600000000000023 92.2% 54.9%;
+            --twc-graphic-orange-2: 28.69999999999999 100% 58.6%
+        }
+
+        .\[appearance\:textfield\] {
+            -webkit-appearance: textfield;
+            -moz-appearance: textfield;
+            appearance: textfield
+        }
+
+        .\*\:\!ui-text-base-3>* {
+            --tw-text-opacity: 1 !important;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity))) !important
+        }
+
+        .placeholder\:ui-text-base-2::-moz-placeholder {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .placeholder\:ui-text-base-2::placeholder {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .placeholder\:ui-text-base-3::-moz-placeholder {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .placeholder\:ui-text-base-3::placeholder {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .first\:ui-rounded-l-\[8px\]:first-child {
+            border-bottom-left-radius: 8px;
+            border-top-left-radius: 8px
+        }
+
+        .first\:ui-border-r-0:first-child {
+            border-right-width: 0
+        }
+
+        .last\:ui-mb-0:last-child {
+            margin-bottom: 0
+        }
+
+        .last\:ui-rounded-r-\[8px\]:last-child {
+            border-bottom-right-radius: 8px;
+            border-top-right-radius: 8px
+        }
+
+        .last\:ui-border-l-0:last-child {
+            border-left-width: 0
+        }
+
+        .focus-within\:ui-border-blue-1:focus-within {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .hover\:ui-border-blue-1:hover {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .hover\:ui-border-second-1:hover {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-1)/var(--twc-second-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .hover\:ui-bg-blue-1:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-blue-1\/20:hover {
+            background-color: hsl(var(--twc-blue-1)/.2)
+        }
+
+        .hover\:ui-bg-blue-2:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-blue-2)/var(--twc-blue-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-graphic-second-1:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-1)/var(--twc-graphic-second-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-graphic-second-2:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-2)/var(--twc-graphic-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-green-2:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-green-2)/var(--twc-green-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-red-1\/20:hover {
+            background-color: hsl(var(--twc-red-1)/.2)
+        }
+
+        .hover\:ui-bg-red-2:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-red-2)/var(--twc-red-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-second-2:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-bg-second-3:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-3)/var(--twc-second-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .hover\:ui-text-base-2:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .hover\:ui-text-base-3:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .hover\:ui-text-black-1:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-black-1)/var(--twc-black-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .hover\:ui-text-blue-1:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .hover\:ui-text-blue-2:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-2)/var(--twc-blue-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .hover\:ui-text-blue-3:hover {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-3)/var(--twc-blue-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .focus-visible\:ui-border-blue-1:focus-visible {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .active\:ui-border-blue-2:active {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-2)/var(--twc-blue-2-opacity, var(--tw-border-opacity)))
+        }
+
+        .active\:ui-bg-blue-1\/20:active {
+            background-color: hsl(var(--twc-blue-1)/.2)
+        }
+
+        .active\:ui-bg-blue-3:active {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-blue-3)/var(--twc-blue-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .active\:ui-bg-graphic-second-2:active {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-graphic-second-2)/var(--twc-graphic-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .active\:ui-bg-green-3:active {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-green-3)/var(--twc-green-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .active\:ui-bg-red-1\/20:active {
+            background-color: hsl(var(--twc-red-1)/.2)
+        }
+
+        .active\:ui-bg-second-3:active {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-3)/var(--twc-second-3-opacity, var(--tw-bg-opacity)))
+        }
+
+        .active\:ui-text-base-2:active {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-text-opacity)))
+        }
+
+        .active\:ui-text-blue-3:active {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-3)/var(--twc-blue-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .disabled\:ui-cursor-not-allowed:disabled {
+            cursor: not-allowed
+        }
+
+        .disabled\:ui-border-second-2:disabled {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-border-opacity)))
+        }
+
+        .disabled\:ui-bg-second-2:disabled {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .disabled\:ui-bg-transparent:disabled {
+            background-color: transparent
+        }
+
+        .disabled\:ui-text-base-3:disabled {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .ui-group:focus .group-focus\:ui-text-white {
+            --tw-text-opacity: 1;
+            color: rgb(255 255 255/var(--tw-text-opacity))
+        }
+
+        .aria-disabled\:ui-cursor-default[aria-disabled=true] {
+            cursor: default
+        }
+
+        .aria-disabled\:ui-bg-second-2[aria-disabled=true] {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .aria-disabled\:ui-text-base-3[aria-disabled=true] {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        .aria-selected\:ui-rounded-\[8px\][aria-selected=true] {
+            border-radius: 8px
+        }
+
+        .aria-selected\:ui-rounded-full[aria-selected=true] {
+            border-radius: 9999px
+        }
+
+        .aria-selected\:ui-bg-second-2[aria-selected=true] {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .aria-selected\:ui-bg-second-4[aria-selected=true] {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-4)/var(--twc-second-4-opacity, var(--tw-bg-opacity)))
+        }
+
+        .aria-selected\:ui-text-base-1[aria-selected=true] {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-1)/var(--twc-base-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .aria-selected\:ui-text-blue-1[aria-selected=true] {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .aria-selected\:ui-shadow-\[0_6px_10px_0_rgba\(0\2c 0\2c 0\2c 0\.05\)\][aria-selected=true] {
+            --tw-shadow: 0 6px 10px 0 rgba(0, 0, 0, .05);
+            --tw-shadow-colored: 0 6px 10px 0 var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+        }
+
+        .aria-selected\:ui-shadow-md[aria-selected=true] {
+            --tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1);
+            --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+        }
+
+        .aria-\[invalid\=true\]\:ui-border-red-1[aria-invalid=true] {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .hover\:aria-\[disabled\=false\]\:ui-border-second-1[aria-disabled=false]:hover,
+        .hover\:aria-\[invalid\=false\]\:aria-\[disabled\=false\]\:ui-border-second-1[aria-disabled=false][aria-invalid=false]:hover {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-1)/var(--twc-second-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .hover\:aria-\[disabled\=false\]\:focus-within\:ui-border-blue-1:focus-within[aria-disabled=false]:hover {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .data-\[state\=inactive\]\:ui-hidden[data-state=inactive] {
+            display: none
+        }
+
+        .data-\[state\=checked\]\:ui-translate-x-\[19px\][data-state=checked] {
+            --tw-translate-x: 19px
+        }
+
+        .data-\[state\=checked\]\:ui-translate-x-\[19px\][data-state=checked],
+        .data-\[state\=checked\]\:ui-translate-x-\[31px\][data-state=checked] {
+            transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+        }
+
+        .data-\[state\=checked\]\:ui-translate-x-\[31px\][data-state=checked] {
+            --tw-translate-x: 31px
+        }
+
+        .data-\[state\=checked\]\:ui-border-blue-1[data-state=checked] {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .data-\[state\=unchecked\]\:\!ui-border-red-1[data-state=unchecked] {
+            --tw-border-opacity: 1 !important;
+            border-color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-border-opacity))) !important
+        }
+
+        .data-\[state\=checked\]\:ui-bg-blue-1[data-state=checked] {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)))
+        }
+
+        .data-\[state\=active\]\:ui-text-base-1[data-state=active] {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-1)/var(--twc-base-1-opacity, var(--tw-text-opacity)))
+        }
+
+        .disabled\:data-\[state\=checked\]\:ui-border-second-2[data-state=checked]:disabled {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-border-opacity)))
+        }
+
+        .disabled\:data-\[state\=checked\]\:ui-bg-second-2[data-state=checked]:disabled {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        .disabled\:data-\[state\=checked\]\:ui-text-base-3[data-state=checked]:disabled {
+            --tw-text-opacity: 1;
+            color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-text-opacity)))
+        }
+
+        @media (pointer:fine) {
+            .desktop\:enabled\:hover\:ui-bg-blue-1:hover:enabled {
+                --tw-bg-opacity: 1;
+                background-color: hsl(var(--twc-blue-1)/var(--twc-blue-1-opacity, var(--tw-bg-opacity)))
+            }
+
+            .desktop\:enabled\:hover\:ui-text-base-4:hover:enabled {
+                --tw-text-opacity: 1;
+                color: hsl(var(--twc-base-4)/var(--twc-base-4-opacity, var(--tw-text-opacity)))
+            }
+        }
+
+        .\[\&\:\:-webkit-inner-spin-button\]\:ui-appearance-none::-webkit-inner-spin-button,
+        .\[\&\:\:-webkit-outer-spin-button\]\:ui-appearance-none::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            appearance: none
+        }
+
+        .\[\&\:not\(\:empty\)\]\:ui-px-5:not(:empty) {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem
+        }
+
+        .\[\&\:not\(\:empty\)\]\:ui-pb-5:not(:empty) {
+            padding-bottom: 1.25rem
+        }
+
+        .\[\&\:not\(\:empty\)\]\:ui-pt-4:not(:empty) {
+            padding-top: 1rem
+        }
+
+        .\[\&\>\*\]\:\[\&\>\*\]\:ui-fill-base-2>*>* {
+            fill: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, 1))
+        }
+
+        .\[\&\>\*\]\:\[\&\>\*\]\:ui-transition-all>*>* {
+            transition-duration: .15s;
+            transition-property: all;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .\[\&\>\*\]\:\[\&\>\*\]\:data-\[state\=checked\]\:ui-fill-black-1[data-state=checked]>*>*,
+        .\[\&\>\*\]\:\[\&\>\*\]\:data-\[state\=unchecked\]\:ui-fill-black-1[data-state=unchecked]>*>* {
+            fill: hsl(var(--twc-black-1)/var(--twc-black-1-opacity, 1))
+        }
+
+        .\[\&\>input\]\:ui-border-\[1px\]>input {
+            border-width: 1px
+        }
+
+        .\[\&\>input\]\:ui-border-solid>input {
+            border-style: solid
+        }
+
+        .\[\&\>input\]\:ui-border-red-1>input {
+            --tw-border-opacity: 1;
+            border-color: hsl(var(--twc-red-1)/var(--twc-red-1-opacity, var(--tw-border-opacity)))
+        }
+
+        .\[\&\>svg\]\:ui-size-5>svg {
+            height: 1.25rem;
+            width: 1.25rem
+        }
+    </style>
+    <style type="text/css">
+        /*! tailwindcss v3.4.11 | MIT License | https://tailwindcss.com*/
+        *,
+        :after,
+        :before {
+            border: 0 solid #e5e7eb;
+            box-sizing: border-box
+        }
+
+        :after,
+        :before {
+            --tw-content: ""
+        }
+
+        :host,
+        html {
+            -webkit-text-size-adjust: 100%;
+            font-feature-settings: normal;
+            -webkit-tap-highlight-color: transparent;
+            font-family: ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+            font-variation-settings: normal;
+            line-height: 1.5;
+            -moz-tab-size: 4;
+            -o-tab-size: 4;
+            tab-size: 4
+        }
+
+        body {
+            line-height: inherit;
+            margin: 0
+        }
+
+        hr {
+            border-top-width: 1px;
+            color: inherit;
+            height: 0
+        }
+
+        abbr:where([title]) {
+            -webkit-text-decoration: underline dotted;
+            text-decoration: underline dotted
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-size: inherit;
+            font-weight: inherit
+        }
+
+        a {
+            color: inherit;
+            text-decoration: inherit
+        }
+
+        b,
+        strong {
+            font-weight: bolder
+        }
+
+        code,
+        kbd,
+        pre,
+        samp {
+            font-feature-settings: normal;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+            font-size: 1em;
+            font-variation-settings: normal
+        }
+
+        small {
+            font-size: 80%
+        }
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative;
+            vertical-align: baseline
+        }
+
+        sub {
+            bottom: -.25em
+        }
+
+        sup {
+            top: -.5em
+        }
+
+        table {
+            border-collapse: collapse;
+            border-color: inherit;
+            text-indent: 0
+        }
+
+        button,
+        input,
+        optgroup,
+        select,
+        textarea {
+            font-feature-settings: inherit;
+            color: inherit;
+            font-family: inherit;
+            font-size: 100%;
+            font-variation-settings: inherit;
+            font-weight: inherit;
+            letter-spacing: inherit;
+            line-height: inherit;
+            margin: 0;
+            padding: 0
+        }
+
+        button,
+        select {
+            text-transform: none
+        }
+
+        button,
+        input:where([type=button]),
+        input:where([type=reset]),
+        input:where([type=submit]) {
+            -webkit-appearance: button;
+            background-color: transparent;
+            background-image: none
+        }
+
+        :-moz-focusring {
+            outline: auto
+        }
+
+        :-moz-ui-invalid {
+            box-shadow: none
+        }
+
+        progress {
+            vertical-align: baseline
+        }
+
+        ::-webkit-inner-spin-button,
+        ::-webkit-outer-spin-button {
+            height: auto
+        }
+
+        [type=search] {
+            -webkit-appearance: textfield;
+            outline-offset: -2px
+        }
+
+        ::-webkit-search-decoration {
+            -webkit-appearance: none
+        }
+
+        ::-webkit-file-upload-button {
+            -webkit-appearance: button;
+            font: inherit
+        }
+
+        summary {
+            display: list-item
+        }
+
+        blockquote,
+        dd,
+        dl,
+        figure,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        hr,
+        p,
+        pre {
+            margin: 0
+        }
+
+        fieldset {
+            margin: 0
+        }
+
+        fieldset,
+        legend {
+            padding: 0
+        }
+
+        menu,
+        ol,
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0
+        }
+
+        dialog {
+            padding: 0
+        }
+
+        textarea {
+            resize: vertical
+        }
+
+        input::-moz-placeholder,
+        textarea::-moz-placeholder {
+            color: #9ca3af;
+            opacity: 1
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #9ca3af;
+            opacity: 1
+        }
+
+        [role=button],
+        button {
+            cursor: pointer
+        }
+
+        :disabled {
+            cursor: default
+        }
+
+        audio,
+        canvas,
+        embed,
+        iframe,
+        img,
+        object,
+        svg,
+        video {
+            display: block;
+            vertical-align: middle
+        }
+
+        img,
+        video {
+            height: auto;
+            max-width: 100%
+        }
+
+        [hidden] {
+            display: none
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 2rem
+        }
+
+        h2 {
+            font-size: 1.25rem
+        }
+
+        h2,
+        h3 {
+            line-height: 1.75rem
+        }
+
+        h3 {
+            font-size: 1.125rem
+        }
+
+        a {
+            --tw-text-opacity: 1;
+            color: rgb(37 99 235/var(--tw-text-opacity));
+            text-decoration-line: underline
+        }
+
+        *,
+        :after,
+        :before {
+            --tw-border-spacing-x: 0;
+            --tw-border-spacing-y: 0;
+            --tw-translate-x: 0;
+            --tw-translate-y: 0;
+            --tw-rotate: 0;
+            --tw-skew-x: 0;
+            --tw-skew-y: 0;
+            --tw-scale-x: 1;
+            --tw-scale-y: 1;
+            --tw-pan-x: ;
+            --tw-pan-y: ;
+            --tw-pinch-zoom: ;
+            --tw-scroll-snap-strictness: proximity;
+            --tw-gradient-from-position: ;
+            --tw-gradient-via-position: ;
+            --tw-gradient-to-position: ;
+            --tw-ordinal: ;
+            --tw-slashed-zero: ;
+            --tw-numeric-figure: ;
+            --tw-numeric-spacing: ;
+            --tw-numeric-fraction: ;
+            --tw-ring-inset: ;
+            --tw-ring-offset-width: 0px;
+            --tw-ring-offset-color: #fff;
+            --tw-ring-color: rgba(59, 130, 246, .5);
+            --tw-ring-offset-shadow: 0 0 #0000;
+            --tw-ring-shadow: 0 0 #0000;
+            --tw-shadow: 0 0 #0000;
+            --tw-shadow-colored: 0 0 #0000;
+            --tw-blur: ;
+            --tw-brightness: ;
+            --tw-contrast: ;
+            --tw-grayscale: ;
+            --tw-hue-rotate: ;
+            --tw-invert: ;
+            --tw-saturate: ;
+            --tw-sepia: ;
+            --tw-drop-shadow: ;
+            --tw-backdrop-blur: ;
+            --tw-backdrop-brightness: ;
+            --tw-backdrop-contrast: ;
+            --tw-backdrop-grayscale: ;
+            --tw-backdrop-hue-rotate: ;
+            --tw-backdrop-invert: ;
+            --tw-backdrop-opacity: ;
+            --tw-backdrop-saturate: ;
+            --tw-backdrop-sepia: ;
+            --tw-contain-size: ;
+            --tw-contain-layout: ;
+            --tw-contain-paint: ;
+            --tw-contain-style:
+        }
+
+        ::backdrop {
+            --tw-border-spacing-x: 0;
+            --tw-border-spacing-y: 0;
+            --tw-translate-x: 0;
+            --tw-translate-y: 0;
+            --tw-rotate: 0;
+            --tw-skew-x: 0;
+            --tw-skew-y: 0;
+            --tw-scale-x: 1;
+            --tw-scale-y: 1;
+            --tw-pan-x: ;
+            --tw-pan-y: ;
+            --tw-pinch-zoom: ;
+            --tw-scroll-snap-strictness: proximity;
+            --tw-gradient-from-position: ;
+            --tw-gradient-via-position: ;
+            --tw-gradient-to-position: ;
+            --tw-ordinal: ;
+            --tw-slashed-zero: ;
+            --tw-numeric-figure: ;
+            --tw-numeric-spacing: ;
+            --tw-numeric-fraction: ;
+            --tw-ring-inset: ;
+            --tw-ring-offset-width: 0px;
+            --tw-ring-offset-color: #fff;
+            --tw-ring-color: rgba(59, 130, 246, .5);
+            --tw-ring-offset-shadow: 0 0 #0000;
+            --tw-ring-shadow: 0 0 #0000;
+            --tw-shadow: 0 0 #0000;
+            --tw-shadow-colored: 0 0 #0000;
+            --tw-blur: ;
+            --tw-brightness: ;
+            --tw-contrast: ;
+            --tw-grayscale: ;
+            --tw-hue-rotate: ;
+            --tw-invert: ;
+            --tw-saturate: ;
+            --tw-sepia: ;
+            --tw-drop-shadow: ;
+            --tw-backdrop-blur: ;
+            --tw-backdrop-brightness: ;
+            --tw-backdrop-contrast: ;
+            --tw-backdrop-grayscale: ;
+            --tw-backdrop-hue-rotate: ;
+            --tw-backdrop-invert: ;
+            --tw-backdrop-opacity: ;
+            --tw-backdrop-saturate: ;
+            --tw-backdrop-sepia: ;
+            --tw-contain-size: ;
+            --tw-contain-layout: ;
+            --tw-contain-paint: ;
+            --tw-contain-style:
+        }
+
+        input:focus {
+            border: 0;
+            outline: 0 none
+        }
+
+        ::-webkit-scrollbar {
+            border-radius: .75rem;
+            height: 3px;
+            width: 3px
+        }
+
+        ::-webkit-scrollbar-track {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-second-2)/var(--twc-second-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        ::-webkit-scrollbar-thumb {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-base-3)/var(--twc-base-3-opacity, var(--tw-bg-opacity)));
+            border-radius: .75rem;
+            cursor: pointer
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            --tw-bg-opacity: 1;
+            background-color: hsl(var(--twc-base-2)/var(--twc-base-2-opacity, var(--tw-bg-opacity)))
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:active,
+        input:-webkit-autofill:first-line,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:hover {
+            -webkit-box-shadow: 0 0 0 30px hsl(var(--twc-second-3)/var(--twc-second-3-opacity, 1)) inset !important
+        }
+
+        .theme-dark input:-webkit-autofill {
+            -webkit-text-fill-color: #fff
+        }
+
+        .theme-dark input:disabled {
+            -webkit-text-fill-color: #5b5b5b
+        }
+
+        .theme-light input:disabled {
+            -webkit-text-fill-color: #a4a4a4
+        }
+
+        .theme-light input:-webkit-autofill {
+            -webkit-text-fill-color: #444
+        }
+
+        .ui-scrollbar-hide::-webkit-scrollbar {
+            display: none
+        }
+
+        .ui-scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none
+        }
+
+        .ui-no-space-style::-webkit-scrollbar {
+            display: none
+        }
+
+        .ui-no-space-style {
+            -ms-overflow-style: none;
+            scrollbar-width: none
+        }
+    </style>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#161616">
+    <meta name="description"
+        content="Криптобиржа HIEX - удобная и безопасная биржа криптовалют, которая позволяет торговать: покупать, продавать, хранить и обменивать криптовалюту на фиат в России.">
+    <meta name="keywords" content="Криптобиржа,Биржа криптовалют, Биржа виртуальных активов">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="next-head-count" content="6">
+    <link rel="shortcut icon" type="image/x-icon" href="https://abcex.io/favicon.ico">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/0ee3dd8d59e42f8c-s.p.woff2" as="font"
+        type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/66d28f42ef3fac80-s.p.woff2" as="font"
+        type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/2a185a06ef1c8a2e-s.p.woff2" as="font"
+        type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/17b366a27aa471fc-s.p.woff2" as="font"
+        type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/e76d14d3469bbd9c-s.p.woff2" as="font"
+        type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/media/f76960e026b71d6a-s.p.woff2" as="font"
+        type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust">
+    <link rel="preload" href="https://abcex.io/client/_next/static/css/d887839d630d0dab.css" as="style">
+    <link rel="stylesheet" href="https://abcex.io/client/_next/static/css/d887839d630d0dab.css" data-n-g=""><noscript
+        data-n-css=""></noscript>
+    <script type="text/javascript" async="" src="https://widget.intercom.io/widget/co8fii7u"></script>
+    <script defer="" nomodule="" src="/client/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js"></script>
+    <script src="/client/_next/static/chunks/webpack-29cc1d77a819138f.js" defer=""></script>
+    <script src="/client/_next/static/chunks/framework-cba7dc4f657553d5.js" defer=""></script>
+    <script src="/client/_next/static/chunks/main-ccfc90f0b4a3e251.js" defer=""></script>
+    <script src="/client/_next/static/chunks/pages/_app-027996d79d8e5ddf.js" defer=""></script>
+    <script src="/client/_next/static/chunks/9053-88a4f017e13aa80a.js" defer=""></script>
+    <script src="/client/_next/static/chunks/pages/agreements/aml-policy-df28c645beedd55f.js" defer=""></script>
+    <script src="/client/_next/static/4olc8hC05XfpYtwj75_MN/_buildManifest.js" defer=""></script>
+    <script src="/client/_next/static/4olc8hC05XfpYtwj75_MN/_ssgManifest.js" defer=""></script>
+    <style type="text/css" data-styled-jsx="">
+        html {
+            font-family: '__manrope_72b8c0', '__manrope_Fallback_72b8c0' !important
+        }
+    </style>
+    <title>AML политика</title>
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/pages/index-8b1a229401e05615.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/496-0d4889eb49faaa1b.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/4038-af849dcd286473fc.js">
+    <link as="script" rel="prefetch"
+        href="https://abcex.io/client/_next/static/chunks/pages/exchange-531dbb7902f17009.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/7262-7d587feff5a0d04e.js">
+    <link as="script" rel="prefetch" href="https://abcex.io/client/_next/static/chunks/pages/p2p-c4064ced65c252d4.js">
+    <link as="script" rel="prefetch"
+        href="https://abcex.io/client/_next/static/chunks/pages/assets-54c386990bc07a57.js">
+    <link as="script" rel="prefetch"
+        href="https://abcex.io/client/_next/static/chunks/pages/profile-878911f749f11736.js">
+</head>
+
+<body class="theme-dark">
+    <div id="__next">
+        <div>
+            <script type="text/javascript" async="" src="https://mc.yandex.ru/metrika/watch.js"></script>
+        </div>
+        <div class="Toastify"></div>
+        <div class="flex flex-col min-h-screen">
+            <div class="app-container flex flex-col flex-1">
+                <div class="h-full flex flex-col gap-6 px-[45px] pt-8 pb-4 max-w-[1920px] w-full flex-1">
+                    <div class="main relative flex-1 flex flex-col">
+                        <div class="max-w-[768px] m-auto bg-background-1 [&amp;>*]:text-base-1">
+                            <h1>AML&amp;CFT Policies and procedures</h1>
+                            <p class="mt-4">This Policy relates to our anti-money laundering and countering the
+                                financing of terrorism (AML/CFT) policies and procedures. This Policy is solely for the
+                                purpose providing general information and is not, in any way, legally binding either on
+                                us and/or on any other person(s) (natural or otherwise).</p>
+                            <h2 class="my-4" id="our-principles-and-approach-to-aml-cft-efforts">Our Principles and
+                                Approach to AML/CFT Efforts</h2>
+                            <hr class="my-2">
+                            <p>We are committed to supporting AML/CFT efforts, in principle, we are committed to,
+                                amongst other things:</p>
+                            <ul class="ul-list">
+                                <li>exercising due diligence when dealing with our customers, natural persons appointed
+                                    to act for our customers ‘behalf;</li>
+                                <li>conducting our business in conformity with high ethical standards, and to, as far as
+                                    possible, guard against establishing any business relations that is or may be
+                                    connected with or may facilitate money laundering or terrorism financing (ML/TF);
+                                </li>
+                                <li>we will, to the fullest extent possible, assist and cooperate with relevant law
+                                    authorizes to prevent the threat of money-laundering and terrorism-financing.</li>
+                            </ul>
+                            <h2 class="my-4" id="our-approach-to-risk-assessment-and-mitigation">Our Approach to Risk
+                                Assessment and Mitigation</h2>
+                            <hr class="my-2">
+                            <h3 id="risk-assessment">Risk Assessment</h3>
+                            <p>We envisage that the majority of our customers would be retail customers, and that we
+                                would as of the date of this Policy, be mainly operating in the Republic of Seychelles.
+                            </p>
+                            <p>In this regard, we would:</p>
+                            <ol class="ol-list">
+                                <li>document and/or collect documentation in relation to:<ul class="ul-list">
+                                        <li>the identities of our customers;</li>
+                                        <li>the countries or jurisdictions that our customers are from or in.</li>
+                                    </ul>
+                                </li>
+                                <li>ensure that, to the best of our knowledge, skill and ability, that our customers,
+                                    connected persons of a customer, natural persons appointed to act on behalf of a
+                                    customer, beneficial owners of a customer will be assessed and screened with the
+                                    assistance of List of Designated Individuals and Entities which include (but are not
+                                    limited to) the categories such as:<ol class="ol-list">
+                                        <li>as described in Restricted Jurisdiction Policy</li>
+                                        <li>the UN 1267/1989 Al-Qaida List</li>
+                                        <li>the UN 1988 Taliban List</li>
+                                    </ol>
+                                </li>
+                            </ol>
+                            <h3 id="risk-mitigation">Risk Mitigation</h3>
+                            <p>If identified, we shall not deal with any persons identified in the List of Designated
+                                Individuals and Entities.</p>
+                            <h2 class="my-4" id="our-approach-to-new-products-practices-and-technologies">Our Approach
+                                to New Products, Practices and Technologies</h2>
+                            <hr class="my-2">
+                            <p>We shall be properly advised, in relation to, identifying and assessing the ML/TF risks
+                                that may arise in relation to:</p>
+                            <ul class="ul-list">
+                                <li>the development of new products and new business practices, including new delivery
+                                    mechanism;</li>
+                                <li>the use of new or developing technologies for both new and preexisting.</li>
+                            </ul>
+                            <p>We shall especially pay special attention to any new products and new business practices,
+                                including new delivery mechanism, and new or developing technologies, that favor
+                                anonymity such as digital tokens (whether security, payment and/or utility tokens) that
+                                favor anonymity.</p>
+                            <h2 class="my-4" id="our-approach-to-customer-due-diligence-cdd-">Our Approach to Customer
+                                Due Diligence (CDD”)</h2>
+                            <hr class="my-2">
+                            <p>We do not open, maintain or accept anonymous accounts or accounts in fictitious names.
+                            </p>
+                            <p>We do not establish business relations with, or undertake a transaction for a customer
+                                that we have any reasonable grounds to suspect that the assets or funds of a customer
+                                are proceeds of drug dealing or criminal conduct. We shall lodge a Suspicious
+                                Transaction Report and extend a copy to the relevant Financial Intelligence Unit for
+                                such transactions.</p>
+                            <p>We perform CDD:</p>
+                            <ol class="ol-list">
+                                <li>when we establish business relations with any customer;</li>
+                                <li>when we undertake any transaction for any customer whom we had not established
+                                    business relations with;</li>
+                                <li>when we effect or receive virtual assets by transfer for any customer whom we had
+                                    not established business relations with;</li>
+                                <li>when we have suspicion of ML/TF;</li>
+                                <li>when we have doubts about the veracity or adequacy of any information.</li>
+                            </ol>
+                            <p>When we suspect that there are 2 or more transactions are or may be related, linked or
+                                the result of a deliberate restructuring of an otherwise single transaction into smaller
+                                transactions in order to evade the Prevention of ML/TF measures, we shall treat the
+                                transactions as a single transaction and aggregate their values for the purpose of
+                                complying with Prevention of ML/TF principles.</p>
+                            <h3 id="identifying-our-customers">Identifying our Customers</h3>
+                            <p>We shall identify each of our customers.</p>
+                            <p>To identify our customers, we shall obtain, at least:</p>
+                            <ul class="ul-list">
+                                <li>their full names, including aliases;</li>
+                                <li>their unique identification numbers (such as an identity card number, birth
+                                    certificate number, or passport number);</li>
+                                <li>their registration address;</li>
+                                <li>their date of births;</li>
+                                <li>their nationality.</li>
+                            </ul>
+                            <h4 id="verifying-the-identities-of-our-customers">Verifying the Identities of our Customers
+                            </h4>
+                            <p>We shall verify the identities of our customers using reliable, independent source data,
+                                documents or information. </p>
+                            <h2 class="my-4" id="our-approach-to-customer-due-diligence-cdd-">Ongoing Monitoring</h2>
+                            <hr class="my-2">
+                            <p>We shall monitor business relations with our customers on an ongoing basis. We shall,
+                                during the course of business relations with a customer, observe the conduct of the
+                                customer’s account and scrutinize transactions undertaken throughout the course of
+                                business relations, to ensure that the transactions are consistent with our knowledge of
+                                the customer, its business and risk profile and where appropriate, the source of funds.
+                            </p>
+                            <p>We shall perform our risk mitigation measures where the transaction involves a transfer
+                                of virtual assets to or receipt of virtual assets from an entity other than:</p>
+                            <ul class="ul-list">
+                                <li>a financial institution;</li>
+                                <li>a financial institution that is subject to and supervised for compliance with
+                                    AML/CFT requirements consistent with standards set by the FATF.</li>
+                            </ul>
+                            <p>We shall pay special attention to all complex, unusually large or unusual patterns of
+                                transactions, undertaken throughout the course of business relations, that have no
+                                apparent or visible economic or lawful purpose. We shall, to the extent possible,
+                                inquire into the background and purpose of the aforesaid transactions and document its
+                                findings with a view to making this information available to the relevant authorities
+                                should the need arise.</p>
+                            <p>For the purposes of ongoing monitoring, we shall put in place and implement adequate
+                                systems and processes, commensurate with the size and complexity of the payment service
+                                provider to:</p>
+                            <ul class="ul-list">
+                                <li>monitor its business relations with customers</li>
+                                <li>detect and report suspicious, complex, unusually large or unusual patterns of
+                                    transactions undertaken throughout the course of business relations.</li>
+                            </ul>
+                            <p>We shall ensure that the CDD data, documents and information obtained in respect of
+                                customers, natural persons appointed to act on behalf of the customers, connected
+                                parties of the customers and beneficial owners of the customers, are relevant and kept
+                                up-to-date by undertaking reviews of existing CDD data, documents and information,
+                                particularly for higher risk categories of customers.</p>
+                            <p>We have a zero-tolerance policy regarding of our clients activity that may resemble
+                                illegal, including but not limited to child exploitation, terrorist financing, money
+                                laundering, drug trafficking, as well as the use of crypto assets flagged by analytics
+                                systems as related to dark markets , sanctions, stolen coins, ransom or scam. Taking
+                                into account the identified suspicions regarding clients having connections with these
+                                activities, depending on the circumstances, we reserve the right to take the following
+                                measures: request for documents on the essence and meaning of economic transactions with
+                                a warning temporary blocking of an account from requests for documents about the origin
+                                of funds and their sources permanent account blocking with notification to law
+                                enforcement agencies and the relevant regulator.</p>
+                            <p>In this case, receiving funds from the account is possible only after a positive response
+                                from the regulatory authorities after a comprehensive investigation of suspicions of
+                                illegal activities.</p>
+                            <p>We shall implement the policies and procedures when establishing business relations with
+                                a customer and when conducting ongoing due diligence.</p>
+                            <p>Where there is no face-to-face contact, the payment service provider shall perform CDD
+                                measures that are at least as stringent as those that would be required to be performed
+                                if there was face-to-face contact.</p>
+                            <h2 class="my-4" id="our-approach-to-customer-due-diligence-cdd-">Screening</h2>
+                            <hr class="my-2">
+                            <p>We shall screen a customer, natural persons appointed to act on behalf of the customer,
+                                connected parties of the customer and beneficial owners of the customer against relevant
+                                ML/TF information sources, as well as lists and information provided by the Authority
+                                for the purposes of determining if there are any ML/TF risks in relation to the
+                                customer.</p>
+                            <p>We shall screen the persons:</p>
+                            <ul class="ul-list">
+                                <li>when, or as soon as reasonably practicable after, we establish business relations
+                                    with a customer;</li>
+                                <li>before we undertake any transaction for any customer who has not otherwise
+                                    established business relations with the payment service provider;</li>
+                                <li>before we effect or receive virtual assets by value transfer, for a customer who has
+                                    not otherwise established business relations with us;</li>
+                                <li>on a periodic basis after we establishes business relations with our customers;</li>
+                            </ul>
+                            <p>when there are any changes or updates to:</p>
+                            <ul class="ul-list">
+                                <li>the lists and information provided by the Authority to the payment service provider;
+                                </li>
+                                <li>the natural persons appointed to act on behalf of a customer, connected parties of a
+                                    customer or beneficial owners.</li>
+                            </ul>
+                            <p>We shall screen all value transfer originators and value transfer beneficiaries, against
+                                lists and information provided by the Authority for the purposes of determining if there
+                                are any ML/TF risks.</p>
+                            <p>We shall document the results of all screening.</p>
+                            <h2 class="my-4" id="our-approach-to-enhanced-cdd">Our Approach to Enhanced CDD</h2>
+                            <hr class="my-2">
+                            <h3 id="politically-exposed-persons">Politically Exposed Persons</h3>
+                            <p>We shall use all reasonable means to determine if a customer, any natural person
+                                appointed to act on behalf of a customer, any connected party of the customer or any
+                                beneficial owner of the customer is a politically exposed person, or a family member or
+                                close associate of a politically exposed person.</p>
+                            <p>We shall, in addition to performing CDD measures, perform at least the following enhanced
+                                customer due diligence (eCDD) measures where a customer or any beneficial owner of the
+                                customer is determined by us to be a politically exposed person, or a family member or
+                                close associate of a politically exposed person:</p>
+                            <ul class="ul-list">
+                                <li>obtain approval from senior management to establish and continue business relations
+                                    with the customer;</li>
+                                <li>establish by reasonable means, the source of wealth and source of funds of the
+                                    customer and any beneficial owner of the customer;</li>
+                                <li>conduct, during the course of business relations with the customer, enhanced
+                                    monitoring of the business relations with the customer.</li>
+                            </ul>
+                            <p>We shall increase the degree and nature of monitoring for any transactions that appear
+                                unusual or suspicious.</p>
+                            <h3 id="higher-risk-categories">Higher Risk Categories</h3>
+                            <p>We recognize that the following circumstances where a customer presents or may present a
+                                higher risk for ML/TF include but are not limited to the following:</p>
+                            <ol class="ol-list">
+                                <li>where a customer or any beneficial owner of the customer is from or in a country or
+                                    jurisdiction in relation to which the FATF has called for countermeasures, the
+                                    payment service provider shall treat any business relations with or transactions for
+                                    any such customer as presenting a higher risk for ML/TF;</li>
+                                <li>where a customer or any beneficial owner of the customer is from or in a country or
+                                    jurisdiction known to have inadequate AML/CFT measures, as determined by the payment
+                                    service provider for itself or notified to payment service providers generally by
+                                    the Authority or other foreign regulatory authorities, the payment service provider
+                                    shall assess whether any such customer presents a higher risk for ML/TF.</li>
+                            </ol>
+                            <p>We will perform enhanced CDD for customer who presents a higher risk for ML/TF or any
+                                customer the Authority notify to us as presenting higher risk for ML/TF.</p>
+                            <h2 class="my-4" id="our-approach-to-value-transfer">Our Approach to Value Transfer</h2>
+                            <hr class="my-2">
+                            <p>If we are the ordering institution, before effecting a value transfer, we shall:</p>
+                            <ul class="ul-list">
+                                <li>identify the value transfer originator and take reasonable measures to verify his or
+                                    its identity (if we have not already done so);</li>
+                                <li>record adequate details of the value transfer including but not limited to, the date
+                                    of the value transfer, the type and value of virtual assets) transferred and the
+                                    value date.</li>
+                            </ul>
+                            <p>If we are an ordering institution, we shall include in the message or payment
+                                instructions that accompanies or relates to the value transfer:</p>
+                            <ul class="ul-list">
+                                <li>the name of the value transfer originator;</li>
+                                <li>the value transfer originator’s account number (or unique transaction reference
+                                    number if applicable);</li>
+                                <li>the name of the value transfer beneficiary;</li>
+                                <li>the value transfer beneficiary’s account number (or unique transaction reference
+                                    number if applicable).</li>
+                            </ul>
+                            <h3 id="value-transfers-exceeding-a-particular-threshold">Value Transfers Exceeding a
+                                particular threshold</h3>
+                            <p>For value transfer exceeding a particular threshold and if we are an ordering
+                                institution, we shall identify the value transfer originator and verify his or its
+                                identity, include in the message or payment instructions that accompanies or relates to
+                                the value transfer information and any of the following:</p>
+                            <ul class="ul-list">
+                                <li>the value transfer originator’s residential address;</li>
+                                <li>the value transfer originator’s unique identification number;</li>
+                                <li>the date and place of birth, incorporation or registration of the value transfer
+                                    originator (as may be appropriate).</li>
+                            </ul>
+                            <p>We shall immediately and securely submit to the beneficiary institution all value
+                                transfer originator and value transfer beneficiary information, and shall document all
+                                such information. Where we in the capacity as an ordering institution are not able to
+                                comply with the requirements, we shall not execute the value transfer.</p>
+                            <p>If we are the beneficiary institution, we shall take reasonable measures to identify
+                                value transfers that lack the required value transfer originator or required value
+                                transfer beneficiary institution.</p>
+                            <p>For value transfers where we as the beneficiary institution pays out transferred virtual
+                                assets in cash or cash equivalent to a value transfer beneficiary, we shall identify and
+                                verify the identity of the value transfer beneficiary (if the identity has not been
+                                previously verified).</p>
+                            <p>We shall always conduct a review prior to executing a value transfer lacking the required
+                                value transfer originator or value transfer beneficiary information, and document our
+                                follow-up action.</p>
+                            <p>If we are the intermediary institution, we shall retain all information pertaining to a
+                                value transfer.</p>
+                            <p>When we as an intermediary institution effect a value transfer to another intermediary
+                                institution or beneficiary institution, we shall immediately and securely provide the
+                                information accompanying the value transfer, to that other intermediary institution or
+                                beneficiary institution.</p>
+                            <p>If we are a receiving intermediary institution, we shall keep a record for at least five
+                                years for all information received from an ordering institution or another intermediary
+                                institution.</p>
+                            <p>We shall take reasonable measures to identify value transfers that lack the required
+                                value transfer originator or value transfer beneficiary information when
+                                straight-through processing.</p>
+                            <h2 class="my-4" id="record-keeping">Record Keeping</h2>
+                            <hr class="my-2">
+                            <p>We will keep proper records as required for a time period of at least 5 years.</p>
+                            <h2 class="my-4" id="personal-data">Personal Data</h2>
+                            <hr class="my-2">
+                            <p>We will safeguard the personal data of our customers in the manner prescribed.</p>
+                            <h2 class="my-4" id="suspicious-transactions-reporting-str-">Suspicious Transactions
+                                Reporting (STR”)</h2>
+                            <hr class="my-2">
+                            <p>We will inform the relevant authorities and file STR Reports as required by law. We will
+                                also keep all records and transactions relating to all such transactions and STR
+                                Reports.</p>
+                            <h2 class="my-4" id="our-policies-on-compliance-audit-and-training">Our Policies on
+                                Compliance, Audit and Training</h2>
+                            <hr class="my-2">
+                            <p>Amongst other things, we shall appoint an AML/CFT Compliance Officer at the Management
+                                Level, maintain an independent audit function, and take proactive measures in regularly
+                                training our employees and employees on AML/CFT matters.</p>
+                            <h3 id="enterprise-wide-money-laundering-terrorism-financing-risk-assessment">
+                                Enterprise-wide money-laundering/terrorism financing risk assessment</h3>
+                            <p>We will employ and enterprise-wide money-laundering/terrorism financing risk assessment
+                                in 3 phases:</p>
+                            <h4 id="phase-1-assessing-inherent-risk">Phase 1: Assessing inherent risk</h4>
+                            <p>We will assess the inherent risk in relation to our:</p>
+                            <ul class="ul-list">
+                                <li>customer or entity: we will make an assessment in relation to our customers and/or
+                                    entities we deal with;</li>
+                                <li>product or services: we will and are mindful of who we serve in our virtual assets
+                                    OTC services;</li>
+                                <li>geographical level: we will not deal with customers from the List of Designated
+                                    Individuals and Entities.</li>
+                            </ul>
+                            <h4 id="phase-2-assessing-mitigating-control">Phase 2: Assessing mitigating control</h4>
+                            <p>We will assess our mitigating controls in relation the aforesaid, any and/or all
+                                customer(s) whom we find suspicious will be first monitored, followed by exercising
+                                eCDD.</p>
+                            <h4 id="phase-3-assessing-residual-risk">Phase 3: Assessing residual risk</h4>
+                            <p>We will assess our residual risks after assessing our mitigating controls.</p>
+                            <h2 class="my-4" id="our-approach-to-enhanced-cdd">Crypto Travel Rule</h2>
+                            <hr class="my-2">
+                            <p>The crypto travel rule is a regulation that requires customer due diligence every time
+                                crypto assets are moved. Companies can verify the identities of both the sender and
+                                receiver in a transaction, so they can spot red flags. Depending on the guidelines set
+                                up, a provider can choose to halt suspicious transactions before they even go through.
+                                Our company fully follows these rules and transmits transaction information to financial
+                                institutions in accordance with established rules and regulations.</p>
+                            <h2 class="my-4" id="our-approach-to-enhanced-cdd">AML/CFT policy</h2>
+                            <ul class="ul-list">
+                                <li>The Company complies with all legal norms relating to interaction with law
+                                    enforcement authorities in the countries of its presence, including, but not limited
+                                    to: complete and in-depth answers to incoming requests with the provision of all
+                                    necessary information, both under court orders and out of court, if the legislation
+                                    on availability does not oblige to receive a judicial request for information;</li>
+                                <li>blocking of user assets both by court orders and out of court, if the legislation of
+                                    the place of presence does not oblige receiving a judicial request to seize funds;
+                                </li>
+                                <li>transfer of property by court order to government authorities or to victims without
+                                    payment of compensation to users who have violated the laws of the country of
+                                    presence;</li>
+                                <li>assistance to law enforcement and other authorized bodies in the investigation of
+                                    crimes related to cryptocurrencies, as well as information support upon requests;
+                                </li>
+                                <li>comprehensive assistance in the return of stolen assets to their rightful owners.
+                                </li>
+                            </ul>
+                            <p>In our activities aimed at ensuring the legality of transactions on the blockchain and
+                                the safety of users, in addition to the listed FATF recommendations, we use Federal Law
+                                No. 115-FL “On Countering the legalization (laundering) of illegal earnings and the
+                                financing of terrorism,” including:</p>
+                            <ul>
+                                <li>Exchange and P2P platform users identification (KYC);</li>
+                                <li>Wallets and transactions identification (KYT);</li>
+                                <li>Selective Identification of the Fiat funds' origion (Source of funds);</li>
+                                <li>Implementation of procedures, algorithms and policies related to preventing of money
+                                    laundering and financing of Terrorism (AML/CFT) and continuous development of such
+                                    procedures, algorithms and policies;</li>
+                                <li>formation and continuous improvement of security and compliance departments, which
+                                    are also responsible to identify and prevent transactions related to criminal
+                                    activities, as well as assistance in solving crimes involving transactions on public
+                                    blockchains;</li>
+                            </ul>
+                            <p>Special admission procedure of PEP's (politically exposed persons ) to operations on the
+                                exchange and P2P platform.</p>
+                            <p>In order to implement the stated principles, we cooperate with KYC/AML providers
+                                authorized to process users’ personal data in accordance with the requirements of
+                                Federal Law No. 152-FL “On Personal Data”. We carry out KYT analytics both independently
+                                (using databases and algorithms for identifying wallets and transactions related to
+                                criminal activities) and with the involvement of third-party providers of such services.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><iframe id="intercom-frame"
+        style="position: absolute !important; opacity: 0 !important; width: 1px !important; height: 1px !important; top: 0 !important; left: 0 !important; border: none !important; display: block !important; z-index: -1 !important; pointer-events: none;"
+        aria-hidden="true" tabindex="-1" title="Intercom"></iframe>
+    <script id="__NEXT_DATA__"
+        type="application/json">{"props":{"pageProps":{}},"page":"/agreements/aml-policy","query":{},"buildId":"4olc8hC05XfpYtwj75_MN","assetPrefix":"/client","nextExport":true,"autoExport":true,"isFallback":false,"scriptLoader":[]}</script>
+    <script defer=""
+        src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+        data-cf-beacon="{&quot;rayId&quot;:&quot;8fe7014c6ca9e4b3&quot;,&quot;serverTiming&quot;:{&quot;name&quot;:{&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfSpeedBrain&quot;:true,&quot;cfCacheStatus&quot;:true}},&quot;version&quot;:&quot;2024.10.5&quot;,&quot;token&quot;:&quot;5652d555b2cd42218b24bb9bdddf5daa&quot;}"
+        crossorigin="anonymous"></script>
+    <next-route-announcer>
+        <p aria-live="assertive" id="__next-route-announcer__" role="alert"
+            style="border: 0px; clip: rect(0px, 0px, 0px, 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; top: 0px; width: 1px; white-space: nowrap; overflow-wrap: normal;">
+        </p>
+    </next-route-announcer>
+    <script src="/client/_next/static/chunks/pages/index-8b1a229401e05615.js"></script>
+    <script src="/client/_next/static/chunks/496-0d4889eb49faaa1b.js"></script>
+    <script src="/client/_next/static/chunks/4038-af849dcd286473fc.js"></script>
+    <script src="/client/_next/static/chunks/pages/exchange-531dbb7902f17009.js"></script>
+    <script src="/client/_next/static/chunks/7262-7d587feff5a0d04e.js"></script>
+    <script src="/client/_next/static/chunks/pages/p2p-c4064ced65c252d4.js"></script>
+    <script src="/client/_next/static/chunks/pages/profile-878911f749f11736.js"></script>
+    <script src="/client/_next/static/chunks/pages/assets-54c386990bc07a57.js"></script><iframe id="intercom-frame"
+        style="position: absolute !important; opacity: 0 !important; width: 1px !important; height: 1px !important; top: 0 !important; left: 0 !important; border: none !important; display: block !important; z-index: -1 !important; pointer-events: none;"
+        aria-hidden="true" tabindex="-1" title="Intercom"></iframe>
+    <div class="intercom-lightweight-app">
+
+        <style id="intercom-lightweight-app-style" type="text/css">
+            @keyframes intercom-lightweight-app-launcher {
+                from {
+                    opacity: 0;
+                    transform: scale(0.5);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            @keyframes intercom-lightweight-app-gradient {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            @keyframes intercom-lightweight-app-messenger {
+                0% {
+                    opacity: 0;
+                    transform: scale(0);
+                }
+
+                40% {
+                    opacity: 1;
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            .intercom-lightweight-app {
+                position: fixed;
+                z-index: 2147483001;
+                width: 0;
+                height: 0;
+                font-family: intercom-font, "Helvetica Neue", "Apple Color Emoji", Helvetica, Arial, sans-serif;
+            }
+
+            .intercom-lightweight-app-gradient {
+                position: fixed;
+                z-index: 2147483002;
+                width: 500px;
+                height: 500px;
+                bottom: 0;
+                right: 0;
+                pointer-events: none;
+                background: radial-gradient(ellipse at bottom right,
+                        rgba(29, 39, 54, 0.16) 0%,
+                        rgba(29, 39, 54, 0) 72%);
+                animation: intercom-lightweight-app-gradient 200ms ease-out;
+            }
+
+            .intercom-lightweight-app-launcher {
+                position: fixed;
+                z-index: 2147483003;
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none;
+                bottom: 20px;
+                right: 20px;
+                max-width: 48px;
+                width: 48px;
+                max-height: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: #0166ff;
+                cursor: pointer;
+                box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.06), 0 2px 32px 0 rgba(0, 0, 0, 0.16);
+                transition: transform 167ms cubic-bezier(0.33, 0.00, 0.00, 1.00);
+                box-sizing: content-box;
+            }
+
+
+            .intercom-lightweight-app-launcher:hover {
+                transition: transform 250ms cubic-bezier(0.33, 0.00, 0.00, 1.00);
+                transform: scale(1.1)
+            }
+
+            .intercom-lightweight-app-launcher:active {
+                transform: scale(0.85);
+                transition: transform 134ms cubic-bezier(0.45, 0, 0.2, 1);
+            }
+
+
+            .intercom-lightweight-app-launcher:focus {
+                outline: none;
+
+
+            }
+
+            .intercom-lightweight-app-launcher-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 48px;
+                height: 48px;
+                transition: transform 100ms linear, opacity 80ms linear;
+            }
+
+            .intercom-lightweight-app-launcher-icon-open {
+
+                opacity: 1;
+                transform: rotate(0deg) scale(1);
+
+            }
+
+            .intercom-lightweight-app-launcher-icon-open svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .intercom-lightweight-app-launcher-icon-open svg path {
+                fill: rgb(255, 255, 255);
+            }
+
+            .intercom-lightweight-app-launcher-icon-self-serve {
+
+                opacity: 1;
+                transform: rotate(0deg) scale(1);
+
+            }
+
+            .intercom-lightweight-app-launcher-icon-self-serve svg {
+                height: 44px;
+            }
+
+            .intercom-lightweight-app-launcher-icon-self-serve svg path {
+                fill: rgb(255, 255, 255);
+            }
+
+            .intercom-lightweight-app-launcher-custom-icon-open {
+                max-height: 24px;
+                max-width: 24px;
+
+
+                opacity: 1;
+                transform: rotate(0deg) scale(1);
+
+            }
+
+            .intercom-lightweight-app-launcher-icon-minimize {
+
+                opacity: 0;
+                transform: rotate(-60deg) scale(0);
+
+            }
+
+            .intercom-lightweight-app-launcher-icon-minimize svg path {
+                fill: rgb(255, 255, 255);
+            }
+
+            .intercom-lightweight-app-messenger {
+                position: fixed;
+                z-index: 2147483003;
+                overflow: hidden;
+                background-color: white;
+                animation: intercom-lightweight-app-messenger 250ms cubic-bezier(0, 1, 1, 1);
+                transform-origin: bottom right;
+
+
+                width: 400px;
+                height: calc(100% - 104px);
+                max-height: 704px;
+                min-height: 250px;
+                right: 20px;
+                bottom: 84px;
+                box-shadow: 0 5px 40px rgba(0, 0, 0, 0.16);
+
+
+                border-radius: 16px;
+            }
+
+            .intercom-lightweight-app-messenger-header {
+                height: 64px;
+                border-bottom: none;
+                background: #a3d2f0
+            }
+
+            .intercom-lightweight-app-messenger-footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                height: 80px;
+                background: #fff;
+                font-size: 14px;
+                line-height: 21px;
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.05);
+
+            }
+
+            @media print {
+                .intercom-lightweight-app {
+                    display: none;
+                }
+            }
+        </style>
+    </div>
+
+
+</body>
+
+</html>
