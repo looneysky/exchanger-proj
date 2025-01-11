@@ -24,9 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (bonus === 0) {
                     skidka = 0; // Если бонус 0
                 } else if (Number.isInteger(bonus)) {
-                    skidka = 0.3; // Если целое число
+                    skidka = 0.03; // Если целое число
                 } else {
-                    skidka = 0.1; // Если не целое число
+                    skidka = 0.01; // Если не целое число
                 }
 
                 console.log(`User bonus: ${bonus}, Discount: ${skidka}`);
