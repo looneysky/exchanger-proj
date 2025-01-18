@@ -1,0 +1,1 @@
+this is temporarry directory for qr-codes images

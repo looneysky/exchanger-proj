@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+    if (window.Telegram.WebApp.initDataUnsafe.start_param === "buy") {
+        window.location.href = "/buy"; // Редирект на /buy
+    } else if (window.Telegram.WebApp.initDataUnsafe.start_param === "sell") {
+        window.location.href = "/sell"; // Редирект на /sell
+    }
+    
     const courseBuyElement = document.getElementById("course_buy");
     const courseSellElement = document.getElementById("course_sell");
 
